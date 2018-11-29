@@ -82,17 +82,21 @@
                         </i>
                     </li>
                     <li>
-                        <i class="fa fa-link" 
+                        <!-- <i class="fa fa-link" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('CreateLink')"
+                            @click="execCommand('CreateLink','http://localhost:3000')"
                             title="插入链接"    
                         >
-                        </i>
+                        </i> -->
+                        <addLink/>
                     </li>
                     <li>
                         <i class="fa fa-list-ul" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('InsertUnorderedList')"
+                            @click="selectedUnorder=!selectedUnorder,
+                            selectedOrdered=false,
+                            execCommand('InsertUnorderedList')"
+                            :style="selectedUnorder?{color:'red'}:{color:'black'}"
                             title="无序列表"    
                         >
                         </i>
@@ -100,8 +104,11 @@
                     <li>
                     <i class="fa fa-list-ol" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('InsertOrderedList')"
-                            title="有序列表"    
+                            @click="selectedOrdered=!selectedOrdered,
+                                selectedUnorder=false,
+                            execCommand('insertOrderedList')"
+                            title="有序列表"
+                            :style="selectedOrdered?{color:'red'}:{color:'black'}"    
                         >
                         </i>
                     </li>
@@ -132,7 +139,7 @@
                     <li>
                         <i class="fa fa-eraser" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('RemoveFormat')"
+                            @click="execCommand('removeFormat')"
                             title="取消效果"    
                         >
                         </i>
@@ -171,8 +178,10 @@
 </template>
 <script>
 import './css/font-awesome.min.css'
+
 import edHeader from './Header'
 import addImage from './AddImage'
+import addLink from './AddLink'
 export default {
     name: 'mt-editor',
     data(){
@@ -180,16 +189,17 @@ export default {
             isHTML:'false',
             content: ``,
             showChild: false,
+            selectedUnorder:false,
+            selectedOrdered:false
         }
     },
     components: {
         edHeader,
-        addImage
+        addImage,
+        addLink
     },
     methods: {
-        execCommand:(command,value) => {
-		    value? document.execCommand(command, false, value):document.execCommand(command, false, null)
-		},
+       
         insertTable(){
             console.log("插入表格");
         },
@@ -213,7 +223,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     * {
         margin: 0;
         padding: 0;
@@ -264,7 +274,28 @@ export default {
     .icons {
         width: 24px;
         height: 24px;
-        background: url("./css_sprites.png") no-repeat;
+        /* background: url("./css_sprites.png") no-repeat; */
         
+    }
+     .footer{
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        text-align: right;
+    }
+    .btn {
+        width: 60px;
+        height: 30px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        margin-right: 10px;
+        outline: none;
+    }
+    .primary{
+        background: #1678fa;
+    }
+    .danger{
+        background: #e9210e
     }
 </style>

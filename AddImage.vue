@@ -32,7 +32,7 @@
                     </div>
                     <div class="preview" ref="preview"></div>
                     <div class="uploadFooter">
-                        <button class="btn danger">取消</button>
+                        <button class="btn danger" @click="handleClose">取消</button>
                         <button class="btn primary" @click="insertImage">确定</button>
                     </div>
                 </div>
@@ -51,23 +51,15 @@
 export default {
     data(){
         return {
-            show: false,
             currentIndex:1,
             files: [],
-            currentSelection:{}
         }
     },
     methods: {
-        execCommand(value){
-            document.execCommand('insertImage',false,value)
-        },
-        handleClose(event){
-            this.show = false;
-        },
+      
         // 选择图片
          selectFile(event){
             var e = event || window.event;
-            console.log(e);
             var files = e.target.files;
             this.files = files;
             var preview = this.$refs.preview;
@@ -75,12 +67,10 @@ export default {
         },
         // 将图片插入到内容中
         insertImage(){
-            // console.log(this.$parent.$refs.richEdit);
             this.restoreRange();
-            var richEdit = this.$parent.$refs.richEdit;
             for(var i=0;i<this.files.length;i++){
                 var url = this.getObjectURL(this.files[i]);
-                this.execCommand(url);
+                this.execCommand('insertImage',url);
             }
             this.handleClose();
         },
@@ -98,9 +88,6 @@ export default {
                 })
             }
         },
-        execCommand(value){
-            document.execCommand("insertImage", false, value);
-        },
         //取得该文件的url 
         getObjectURL(file) { 
         　　var url = null ; 
@@ -112,37 +99,6 @@ export default {
         　　　　url = window.webkitURL.createObjectURL(file) ; 
         　　} 
         　　return url ; 
-        },
-        backupRange() {
-            let selection = window.getSelection();
-            let range = selection.getRangeAt(0);
-            console.log(range);
-            this.currentSelection = {
-                "startContainer": range.startContainer,
-                "startOffset": range.startOffset,
-                "endContainer": range.endContainer,
-                "endOffset": range.endOffset
-
-            }
-        },
-        restoreRange() {
-            if (this.currentSelection) {
-
-                let selection = window.getSelection();
-
-                selection.removeAllRanges();
-
-                let range = document.createRange();
-
-                range.setStart(this.currentSelection.startContainer, this.currentSelection.startOffset);
-
-                range.setEnd(this.currentSelection.endContainer, this.currentSelection.endOffset);
-
-                // 向选区中添加一个区域
-
-                selection.addRange(range);  
-            }
-
         }
     },
     watch: {
