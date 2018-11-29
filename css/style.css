@@ -1,0 +1,16 @@
+
+.btn {
+    width: 60px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    margin-right: 10px;
+    outline: none;
+}
+.primary{
+    background: #1678fa;
+}
+.danger{
+    background: #e9210e
+}

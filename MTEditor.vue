@@ -84,7 +84,7 @@
                     <li>
                         <!-- <i class="fa fa-link" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('CreateLink','http://localhost:3000')"
+                            @click="execCommand('CreateLink')"
                             title="插入链接"    
                         >
                         </i> -->
@@ -93,10 +93,7 @@
                     <li>
                         <i class="fa fa-list-ul" 
                             onmousedown="event.preventDefault();" 
-                            @click="selectedUnorder=!selectedUnorder,
-                            selectedOrdered=false,
-                            execCommand('InsertUnorderedList')"
-                            :style="selectedUnorder?{color:'red'}:{color:'black'}"
+                            @click="execCommand('InsertUnorderedList')"
                             title="无序列表"    
                         >
                         </i>
@@ -104,11 +101,8 @@
                     <li>
                     <i class="fa fa-list-ol" 
                             onmousedown="event.preventDefault();" 
-                            @click="selectedOrdered=!selectedOrdered,
-                                selectedUnorder=false,
-                            execCommand('insertOrderedList')"
+                            @click="execCommand('insertOrderedList')"
                             title="有序列表"
-                            :style="selectedOrdered?{color:'red'}:{color:'black'}"    
                         >
                         </i>
                     </li>
@@ -178,7 +172,6 @@
 </template>
 <script>
 import './css/font-awesome.min.css'
-
 import edHeader from './Header'
 import addImage from './AddImage'
 import addLink from './AddLink'
@@ -199,7 +192,9 @@ export default {
         addLink
     },
     methods: {
-       
+        execCommand:(command,value) => {
+		    value? document.execCommand(command, false, value):document.execCommand(command, false, null)
+		},
         insertTable(){
             console.log("插入表格");
         },
@@ -223,7 +218,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     * {
         margin: 0;
         padding: 0;
@@ -276,26 +271,5 @@ export default {
         height: 24px;
         /* background: url("./css_sprites.png") no-repeat; */
         
-    }
-     .footer{
-        width: 100%;
-        height: 50px;
-        line-height: 50px;
-        text-align: right;
-    }
-    .btn {
-        width: 60px;
-        height: 30px;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        margin-right: 10px;
-        outline: none;
-    }
-    .primary{
-        background: #1678fa;
-    }
-    .danger{
-        background: #e9210e
     }
 </style>

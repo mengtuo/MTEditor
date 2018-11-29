@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import './css/style.css'
 export default {
     data(){
         return {
@@ -61,7 +62,7 @@ export default {
     }
     .linkList {
         width: 350px;
-        height: 150px;
+        height: 160px;
         background: white;
         padding: 5px;
         box-shadow: 0px 0px 2px 2px rgb(189, 189, 189);
@@ -78,5 +79,11 @@ export default {
         border-bottom: 1px solid lightgray;
         margin-top: 20px;
         font-size: 15px;
+    }
+    .footer{
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: right;
     }
 </style>
