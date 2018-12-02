@@ -1,4 +1,10 @@
-
+* {
+    margin-left: 0;
+    padding: 0;
+}
+ul {
+    margin-left: 10px;
+}
 .btn {
     width: 60px;
     height: 30px;
@@ -13,4 +19,18 @@
 }
 .danger{
     background: #e9210e
+}
+
+/* 表格 */
+.insertTable {
+    width: 100%;
+    border-collapse:collapse; 
+    display: table;
+}
+.insertTable tr {
+    border: none;
+}
+.insertTable tr td{
+    border:1px solid rgb(147, 146, 146);
+    text-align: center;
 }

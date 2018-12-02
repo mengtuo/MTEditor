@@ -45,14 +45,35 @@ Vue.mixin({
                 selection.addRange(range);  
             }
 
+        },
+         adjustList(typeName) {
+            let lists = document.querySelectorAll(typeName);
+            console.log(lists);
+            for (let i = 0; i < lists.length; i++) {
+                let ele = lists[i]; // ol
+                let parentNode = ele.parentNode;
+                if (parentNode.tagName === 'P' && parentNode.firstChild.tagName==="TABLE") {
+                    console.log("table会进来的");
+                    parentNode.insertAdjacentElement('beforebegin', ele);
+                    parentNode.remove()
+                }
+            }    
+        },
+        test(){
+            this.show = false;
         }
     },
     watch: {
         show(value){
             if(value){
-                console.log("备份");
+                document.addEventListener("click",this.test)
                 this.backupRange();
+            }else{
+                document.removeEventListener('click',this.test)
             }
         }
+    },
+    created(){
+        
     }
 })

@@ -74,20 +74,10 @@
                         <addImage/>
                     </li>
                     <li>
-                        <i class="fa fa-table" 
-                            onmousedown="event.preventDefault();" 
-                            @click="insertTable"
-                            title="插入表格"    
-                        >
-                        </i>
+                       
+                        <addTable/>
                     </li>
                     <li>
-                        <!-- <i class="fa fa-link" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('CreateLink')"
-                            title="插入链接"    
-                        >
-                        </i> -->
                         <addLink/>
                     </li>
                     <li>
@@ -175,6 +165,7 @@ import './css/font-awesome.min.css'
 import edHeader from './Header'
 import addImage from './AddImage'
 import addLink from './AddLink'
+import addTable from './AddTable'
 export default {
     name: 'mt-editor',
     data(){
@@ -189,7 +180,8 @@ export default {
     components: {
         edHeader,
         addImage,
-        addLink
+        addLink,
+        addTable
     },
     methods: {
         execCommand:(command,value) => {

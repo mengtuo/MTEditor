@@ -5,7 +5,7 @@
         title="插入链接"
         @click="show=!show"></i>
         <transition name="link">
-            <div  v-show="show" class="linkList">
+            <div  v-show="show" class="linkList"  @click.stop>
                 <span style="color:black">链接</span>
                 <hr>
                 <input type="text" placeholder="链接文字" class="linkeAddr" v-model="linkTitle">
@@ -71,7 +71,6 @@ export default {
         top: 10px;
     }
     .linkeAddr {
-        /* border: none; */
         width: 100%;
         outline: none;
         box-sizing: border-box;
