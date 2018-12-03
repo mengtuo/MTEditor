@@ -29,6 +29,11 @@
             <li @click="addNewOne(1,$event)">在后面添加一行</li>
             <li @click="addNewOne(2,$event)">在前面添加一列</li>
             <li @click="addNewOne(3,$event)">在后面添加一列</li>
+            <li @click="deleteOne(0,$event)">删除当前行</li>
+            <li @click="deleteOne(1,$event)">删除前一行</li>
+            <li @click="deleteOne(2,$event)">删除后一行</li>
+            <li @click="deleteOne(3,$event)">删除前一列</li>
+            <li @click="deleteOne(4,$event)">删除后一列</li>
         </ul>
     </div>
 </template>
@@ -83,7 +88,6 @@ export default {
                 table.appendChild(tr);
 
             }
-            // table.innerHTML = rs;
             table.append(innerDom);
             this.range.insertNode(table);
             this.adjustList('.insertTable');
@@ -137,7 +141,6 @@ export default {
                     Array.from(newTr.children).forEach((item)=>{
                         item.innerHTML = "";
                     })
-                    console.log(this.rowIndex);
                     tapTr.parentElement.insertBefore(newTr,tapTr)
                     break;
                 case 1:
@@ -159,7 +162,6 @@ export default {
         insertAfter(newEl, targetEl)
         {
             var parentEl = targetEl.parentNode;
-                    
             if(parentEl.lastChild == targetEl)
             {
                 parentEl.appendChild(newEl);
@@ -185,6 +187,54 @@ export default {
                             break;
                         }
 
+                    }
+                })
+            }
+        },
+        // 删除操作
+        deleteOne(index,event){
+            switch(index){
+                case 0:
+                    this.tapTr.parentElement.removeChild(this.tapTr);
+                    break;
+                case 1: 
+                    if(this.tapTr.previousElementSibling){
+                        this.tapTr.parentElement.removeChild(this.tapTr.previousElementSibling);
+                    }
+                    break;
+                case 2:
+                    if(this.tapTr.nextElementSibling){
+                        this.tapTr.parentElement.removeChild(this.tapTr.nextElementSibling);
+                    } 
+                    break;
+                case 3:
+                    this.operator("before",'deleteColumn');
+                    break;
+                case 4:
+                    this.operator("after",'deleteColumn'); 
+                    break;
+            }
+        },
+        operator(direction,type){
+            if(this.tapTr.parentElement.tagName=="TABLE"){
+                var table = this.tapTr.parentElement;
+                    Array.from(table.children).forEach((item)=>{
+                    var children = Array.from(item.children);
+                    for(var i=0;i<children.length;i++){
+                        if(type=="deleteColumn"){
+                            if(direction=="before"){
+                                if(i==this.tapIndex-1){
+                                    console.log(children[i]);
+                                    item.removeChild(children[i]);
+                                    break;
+                                }
+                            }else{
+                                if(i==this.tapIndex+1){
+                                    item.removeChild(children[i]);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 })
             }
