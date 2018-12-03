@@ -74,6 +74,6 @@ Vue.mixin({
         }
     },
     created(){
-        
+        // this.backupRange();
     }
 })

@@ -25,15 +25,37 @@
             </div>
         </div>
          <ul id="menu" v-show="showMenu">
-            <li @click="addNewOne(0,$event)">在前面添加一行</li>
-            <li @click="addNewOne(1,$event)">在后面添加一行</li>
-            <li @click="addNewOne(2,$event)">在前面添加一列</li>
-            <li @click="addNewOne(3,$event)">在后面添加一列</li>
-            <li @click="deleteOne(0,$event)">删除当前行</li>
-            <li @click="deleteOne(1,$event)">删除前一行</li>
-            <li @click="deleteOne(2,$event)">删除后一行</li>
-            <li @click="deleteOne(3,$event)">删除前一列</li>
-            <li @click="deleteOne(4,$event)">删除后一列</li>
+             <li @click="backupRange(),insertTable()">快速插入表格</li>
+             <li @mouseover="showAddMenu=true"
+                @mouseout="showAddMenu=false"
+                >
+                    新增操作
+                    <i class="fa fa-chevron-right"></i>
+                <transition name="slideout">
+                 <ul v-show="showAddMenu" class="addOperator">
+                    <li @click="addNewOne(0,$event)">在前面添加一行</li>
+                    <li @click="addNewOne(1,$event)">在后面添加一行</li>
+                    <li @click="addNewOne(2,$event)">在前面添加一列</li>
+                    <li @click="addNewOne(3,$event)">在后面添加一列</li>
+                 </ul>
+                </transition>
+             </li>
+            
+            <li @mouseover="showDeleteMenu=true"
+                @mouseout="showDeleteMenu=false"
+            >删除操作
+                <i class="fa fa-chevron-right"></i>
+                <transition name="slideout">
+                <ul class="deleteOperator" v-show="showDeleteMenu">
+                    <li @click="deleteOne(0,$event)">删除当前行</li>
+                    <li @click="deleteOne(1,$event)">删除前一行</li>
+                    <li @click="deleteOne(2,$event)">删除后一行</li>
+                    <li @click="deleteOne(3,$event)">删除前一列</li>
+                    <li @click="deleteOne(4,$event)">删除后一列</li>
+                </ul>
+                </transition>
+            </li>
+            
         </ul>
     </div>
 </template>
@@ -41,13 +63,15 @@
 export default {
     data(){
         return {
-            row: 0,
-            column:0,
+            row: 5,
+            column:5,
             showMenu: false,
             tapTd: {},//右键选中元素的
             tapIndex: 0,//选中的元素的下标
             tapTr: {},
-            rowIndex: 0
+            rowIndex: 0,
+            showDeleteMenu:false,
+            showAddMenu: false,
         }
     },
     methods:{
@@ -258,6 +282,11 @@ export default {
 }
 </script>
 <style scoped>
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
     .newTable{
         position: relative;
         width: 200px;
@@ -296,5 +325,19 @@ export default {
     }
     #menu li:hover{
         background: lightcyan ;
+    }
+    .deleteOperator,.addOperator {
+        margin-left: 100px;
+        margin-top: -30px;
+        border: 1px solid lightgray;
+        width: 100px;
+        background: white;
+    }
+    .slideout-enter-active,.slideout-leave-active {
+        transition: all .5s;
+    }
+    .slideout-enter,.slideout-leave-to {
+        transform: translateX(-50px);
+        opacity: 0;
     }
 </style>
