@@ -26,9 +26,7 @@ ul {
     width: 100%;
     border-collapse:collapse; 
     display: table;
-}
-.insertTable tr {
-    border: none;
+    table-layout: fixed;
 }
 .insertTable tr td{
     border:1px solid rgb(147, 146, 146);

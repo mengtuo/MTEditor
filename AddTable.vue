@@ -22,9 +22,14 @@
                         ></td>
                     </tr>
                 </table>
-               
             </div>
         </div>
+         <ul id="menu" v-show="showMenu">
+            <li @click="addNewOne(0,$event)">在前面添加一行</li>
+            <li @click="addNewOne(1,$event)">在后面添加一行</li>
+            <li @click="addNewOne(2,$event)">在前面添加一列</li>
+            <li @click="addNewOne(3,$event)">在后面添加一列</li>
+        </ul>
     </div>
 </template>
 <script>
@@ -32,10 +37,16 @@ export default {
     data(){
         return {
             row: 0,
-            column:0
+            column:0,
+            showMenu: false,
+            tapTd: {},//右键选中元素的
+            tapIndex: 0,//选中的元素的下标
+            tapTr: {},
+            rowIndex: 0
         }
     },
     methods:{
+        // 清空所有选中的颜色
         resetAll(){
             var mytd = this.$refs.mytd;
             mytd.forEach((item)=>{
@@ -48,18 +59,33 @@ export default {
             var table = document.createElement("table");
             table.className = "insertTable"
             table.setAttribute("cellspacing",0);
-            var rs = '';
-            for(var i=0;i<this.row;i++){
-                rs += `<tr style="height:40px;display:flex;flex-direction:row;" cellspacing=0>`
-                for(var j=0;j<this.column;j++){
-                    rs += `<td style="flex:1;line-height:40px">&nbsp;</td>`
+            table.setAttribute("border",0);
+            table.onmousedown = (e)=>{
+                this.tapTr = e.target.parentElement;
+                 switch(e.button){
+                    case 2: 
+                        this.showMenu = true;
+                        this.tapTd = e.target;
+                        this.tapTr = e.target.parentElement;
+                        this.tapIndex = Array.from(this.tapTr.children).indexOf(e.target);
+                        break;
                 }
-                rs += '</tr>'
             }
-            table.innerHTML = rs;
+            var rs = '';
+            for(let i=0;i<this.row;i++){
+                var tr = document.createElement("tr");
+                for(let j=0;j<this.column;j++){
+                    var td = document.createElement("td");
+                    td.style.cssText = `flex:1;line-height:40px`;
+                    td.innerHTML = "&nbsp;"
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+
+            }
+            // table.innerHTML = rs;
             table.append(innerDom);
             this.range.insertNode(table);
-            console.log(this.range);
             this.adjustList('.insertTable');
             this.resetAll();
         },
@@ -102,6 +128,81 @@ export default {
             }else{
                 this.nextElement(ele.nextElementSibling);
             }
+        },
+        addNewOne(index,event){
+            var tapTr = this.tapTr;
+            switch(index){
+                case 0: 
+                    var newTr = tapTr.cloneNode(true);
+                    Array.from(newTr.children).forEach((item)=>{
+                        item.innerHTML = "";
+                    })
+                    console.log(this.rowIndex);
+                    tapTr.parentElement.insertBefore(newTr,tapTr)
+                    break;
+                case 1:
+                    var newTr = tapTr.cloneNode(true);
+                    Array.from(newTr.children).forEach((item)=>{
+                        item.innerHTML = "";
+                    })
+                    this.insertAfter(newTr,tapTr);
+                    break;
+                case 2: 
+                    // 在前面添加一列
+                    this.insertTd('before');
+                    break;
+                case 3:
+                    this.insertTd('after');
+                    break;
+            }
+        },
+        insertAfter(newEl, targetEl)
+        {
+            var parentEl = targetEl.parentNode;
+                    
+            if(parentEl.lastChild == targetEl)
+            {
+                parentEl.appendChild(newEl);
+            }else
+            {
+                parentEl.insertBefore(newEl,targetEl.nextSibling);
+            }            
+        },
+        insertTd(direction){
+            if(this.tapTr.parentElement.tagName=="TABLE"){
+                var table = this.tapTr.parentElement;
+                Array.from(table.children).forEach((item)=>{
+                    var newTd = document.createElement("td");
+                    var children = Array.from(item.children);
+                    for(var i=0;i<children.length;i++){
+                        if(this.tapIndex==i){
+                            var oldEle = children[i];
+                            if(direction==="before"){
+                                item.insertBefore(newTd,oldEle);
+                            }else{
+                                this.insertAfter(newTd,oldEle)
+                            }
+                            break;
+                        }
+
+                    }
+                })
+            }
+        }
+    },
+    mounted(){
+        var contextmenu=document.getElementById('menu');
+        document.oncontextmenu = function(ev){
+            var oEvent=ev||event;
+            //一定要加px，要不然chrom不认
+            contextmenu.style.position = "absolute";
+            contextmenu.style.top=oEvent.clientY+10+'px';
+            contextmenu.style.left=oEvent.clientX+'px';
+            contextmenu.style.display='block';
+            return false;
+        }
+        document.onclick = function(){
+            contextmenu.style.display = 'none';
         }
     }
 }
@@ -130,5 +231,20 @@ export default {
     .tableList table tr td {
         border: 1px solid lightblue;
     }
-
+    #menu {
+        list-style: none;
+        margin: 0;
+        background: rgb(250, 250, 250);
+        font-size: 12px;
+        border: 1px solid lightgray;
+    }
+    #menu li {
+        height: 30px;
+        line-height: 30px;
+        width: 100px;
+        text-align: center;
+    }
+    #menu li:hover{
+        background: lightcyan ;
+    }
 </style>
