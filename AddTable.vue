@@ -24,43 +24,13 @@
                 </table>
             </div>
         </div>
-         <ul id="menu" v-show="showMenu">
-             <li @click="backupRange(),insertTable()">快速插入表格</li>
-             <li @mouseover="showAddMenu=true"
-                @mouseout="showAddMenu=false"
-                >
-                    新增操作
-                    <i class="fa fa-chevron-right"></i>
-                <transition name="slideout">
-                 <ul v-show="showAddMenu" class="addOperator">
-                    <li @click="addNewOne(0,$event)">在前面添加一行</li>
-                    <li @click="addNewOne(1,$event)">在后面添加一行</li>
-                    <li @click="addNewOne(2,$event)">在前面添加一列</li>
-                    <li @click="addNewOne(3,$event)">在后面添加一列</li>
-                 </ul>
-                </transition>
-             </li>
-            
-            <li @mouseover="showDeleteMenu=true"
-                @mouseout="showDeleteMenu=false"
-            >删除操作
-                <i class="fa fa-chevron-right"></i>
-                <transition name="slideout">
-                <ul class="deleteOperator" v-show="showDeleteMenu">
-                    <li @click="deleteOne(0,$event)">删除当前行</li>
-                    <li @click="deleteOne(1,$event)">删除前一行</li>
-                    <li @click="deleteOne(2,$event)">删除后一行</li>
-                    <li @click="deleteOne(3,$event)">删除前一列</li>
-                    <li @click="deleteOne(4,$event)">删除后一列</li>
-                </ul>
-                </transition>
-            </li>
-            
-        </ul>
+         <Menu :showMenu="showMenu" :tapTd="tapTd" :tapTr="tapTr" :tapIndex="tapIndex"/>
     </div>
 </template>
 <script>
+import Menu from './Menu'
 export default {
+    components: {Menu},
     data(){
         return {
             row: 5,
@@ -70,8 +40,7 @@ export default {
             tapIndex: 0,//选中的元素的下标
             tapTr: {},
             rowIndex: 0,
-            showDeleteMenu:false,
-            showAddMenu: false,
+
         }
     },
     methods:{
@@ -157,112 +126,8 @@ export default {
                 this.nextElement(ele.nextElementSibling);
             }
         },
-        addNewOne(index,event){
-            var tapTr = this.tapTr;
-            switch(index){
-                case 0: 
-                    var newTr = tapTr.cloneNode(true);
-                    Array.from(newTr.children).forEach((item)=>{
-                        item.innerHTML = "";
-                    })
-                    tapTr.parentElement.insertBefore(newTr,tapTr)
-                    break;
-                case 1:
-                    var newTr = tapTr.cloneNode(true);
-                    Array.from(newTr.children).forEach((item)=>{
-                        item.innerHTML = "";
-                    })
-                    this.insertAfter(newTr,tapTr);
-                    break;
-                case 2: 
-                    // 在前面添加一列
-                    this.insertTd('before');
-                    break;
-                case 3:
-                    this.insertTd('after');
-                    break;
-            }
-        },
-        insertAfter(newEl, targetEl)
-        {
-            var parentEl = targetEl.parentNode;
-            if(parentEl.lastChild == targetEl)
-            {
-                parentEl.appendChild(newEl);
-            }else
-            {
-                parentEl.insertBefore(newEl,targetEl.nextSibling);
-            }            
-        },
-        insertTd(direction){
-            if(this.tapTr.parentElement.tagName=="TABLE"){
-                var table = this.tapTr.parentElement;
-                Array.from(table.children).forEach((item)=>{
-                    var newTd = document.createElement("td");
-                    var children = Array.from(item.children);
-                    for(var i=0;i<children.length;i++){
-                        if(this.tapIndex==i){
-                            var oldEle = children[i];
-                            if(direction==="before"){
-                                item.insertBefore(newTd,oldEle);
-                            }else{
-                                this.insertAfter(newTd,oldEle)
-                            }
-                            break;
-                        }
 
-                    }
-                })
-            }
-        },
-        // 删除操作
-        deleteOne(index,event){
-            switch(index){
-                case 0:
-                    this.tapTr.parentElement.removeChild(this.tapTr);
-                    break;
-                case 1: 
-                    if(this.tapTr.previousElementSibling){
-                        this.tapTr.parentElement.removeChild(this.tapTr.previousElementSibling);
-                    }
-                    break;
-                case 2:
-                    if(this.tapTr.nextElementSibling){
-                        this.tapTr.parentElement.removeChild(this.tapTr.nextElementSibling);
-                    } 
-                    break;
-                case 3:
-                    this.operator("before",'deleteColumn');
-                    break;
-                case 4:
-                    this.operator("after",'deleteColumn'); 
-                    break;
-            }
-        },
-        operator(direction,type){
-            if(this.tapTr.parentElement.tagName=="TABLE"){
-                var table = this.tapTr.parentElement;
-                    Array.from(table.children).forEach((item)=>{
-                    var children = Array.from(item.children);
-                    for(var i=0;i<children.length;i++){
-                        if(type=="deleteColumn"){
-                            if(direction=="before"){
-                                if(i==this.tapIndex-1){
-                                    console.log(children[i]);
-                                    item.removeChild(children[i]);
-                                    break;
-                                }
-                            }else{
-                                if(i==this.tapIndex+1){
-                                    item.removeChild(children[i]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                })
-            }
-        }
+        
     },
     mounted(){
         var contextmenu=document.getElementById('menu');
@@ -310,34 +175,5 @@ export default {
     .tableList table tr td {
         border: 1px solid lightblue;
     }
-    #menu {
-        list-style: none;
-        margin: 0;
-        background: rgb(250, 250, 250);
-        font-size: 12px;
-        border: 1px solid lightgray;
-    }
-    #menu li {
-        height: 30px;
-        line-height: 30px;
-        width: 100px;
-        text-align: center;
-    }
-    #menu li:hover{
-        background: lightcyan ;
-    }
-    .deleteOperator,.addOperator {
-        margin-left: 100px;
-        margin-top: -30px;
-        border: 1px solid lightgray;
-        width: 100px;
-        background: white;
-    }
-    .slideout-enter-active,.slideout-leave-active {
-        transition: all .5s;
-    }
-    .slideout-enter,.slideout-leave-to {
-        transform: translateX(-50px);
-        opacity: 0;
-    }
+   
 </style>
