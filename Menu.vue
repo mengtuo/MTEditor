@@ -25,8 +25,8 @@
                 <ul class="trStyle" v-show="showTrStyle">
                     <li>表格隔行变色
                         <ul class="colorUL">
-                            <li @click="setOddColor">奇数行颜色 <i class="fa fa-square oddColor" @click.stop></i></li>
-                            <li @click="setEvenColor">偶数行颜色 <i class="fa fa-square evenColor" @click.stop></i></li>
+                            <li @click.stop="setOddColor">奇数行颜色 <i class="fa fa-square oddColor" @click.stop></i></li>
+                            <li @click.stop="setEvenColor">偶数行颜色 <i class="fa fa-square evenColor" @click.stop></i></li>
                         </ul>
                     </li>
                 </ul>
@@ -155,6 +155,26 @@ export default {
                         }
                     }
                 })
+            }
+        },
+        //设置奇数行颜色
+        setOddColor(){
+            var currentTableChilren = Array.from(this.tapTr.parentElement.children);
+            for(var i=0;i<currentTableChilren.length;i++){
+                if(i%2==0){
+                    var item = currentTableChilren[i];
+                    item.style.backgroundColor="lightgray";
+                }
+            }
+        },
+        //设置偶数行颜色
+        setEvenColor(){
+            var currentTableChilren = Array.from(this.tapTr.parentElement.children);
+            for(var i=0;i<currentTableChilren.length;i++){
+                if(i%2==1){
+                    var item = currentTableChilren[i];
+                    item.style.backgroundColor="lightcyan";
+                }
             }
         }
     }
