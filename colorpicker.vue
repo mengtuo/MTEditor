@@ -1,7 +1,23 @@
 <template>
   <div id="colorpicker" @click.stop>
     <canvas id="canvas" width="100" height="100"></canvas>
-    <div id="mask"></div>
+    <div class="opacityBar">
+      <ul>
+        <li>R <input type="text" class="colorInput" v-model="colors.r"></li>
+        <li>G <input type="text" class="colorInput" v-model="colors.g"></li>
+        <li>B <input type="text" class="colorInput" v-model="colors.b"></li>
+        <li>A <input type="text" class="colorInput" v-model="colors.a"></li>
+      </ul>
+    </div>
+    <div class="colorBar">
+      <ul>
+        <li class="colorItem" style="background-color:red" @click="colorObj.color='red'"></li>
+        <li class="colorItem" style="background-color:green" @click="colorObj.color='green'"></li>
+        <li class="colorItem" style="background-color:blue" @click="colorObj.color='blue'"></li>
+        <li class="colorItem" style="background-color:black" @click="colorObj.color='black'"></li>
+        <li class="colorItem" style="background-color:white" @click="colorObj.color='white'"></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -9,42 +25,63 @@
 import colorsImg from "./images/colors.png";
 export default {
   props: ["colorObj"],
+  data(){
+    return {
+        colors: {
+          r: 255,
+          g: 255,
+          b: 255,
+          a: 1
+        }
+    }
+  },
+  computed: {
+    RGB(){
+      this.colorObj.color = `rgba(${this.colors.r},${this.colors.g},${this.colors.b},${this.colors.a})`;
+      return `rgba(${this.colors.r},${this.colors.g},${this.colors.b},${this.colors.a})`
+    }
+  },
   methods: {
     selectColor(colorHex) {
       this.colorObj.color = colorHex;
     },
     drawColor() {
-      var image = new Image();
-      image.src = colorsImg;
-      var mask = document.getElementById("mask");
-      var canvas = document.getElementById("canvas");
-      var context = canvas.getContext("2d");
-      context.shadowBlur = 20;
-      context.drawImage(image, 0, 0, 100, 100);
-      var _this = this;
-      canvas.onclick = function(e){
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext('2d');
+        var r = 50;
+        var width = canvas.width;
+        var height = canvas.height;
+        canvas.style.width = width + "px";
+        canvas.style.height = height+"px";
+        canvas.height = height*window.devicePixelRatio;
+        canvas.width = width*window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+        for (var i = 0; i < 360; i += .1) {
+                //获取度数
+                var rad = i * (2 * Math.PI) / 360,
+                //计算x,y坐标
+                x = r + Math.cos(rad) * r,
+                y = r + Math.sin(rad) * r;
+                //然后连接线
+                ctx.strokeStyle = "hsl(" + i + ", 100%, 50%)";
+                ctx.beginPath();
+                ctx.moveTo(r,r);
+                ctx.lineTo(x,y);
+                ctx.stroke();
+                ctx.closePath();
+        }
+        var _this = this;
+        canvas.onclick = function(e){
             var pos = _this.findPos(this);
             var x = e.pageX - pos.x;
             var y = e.pageY - pos.y;
-            var coord = "x=" + x + ", y=" + y;
-            var c = this.getContext('2d');
-            var p = c.getImageData(x, y, 1, 1).data; 
-            var hex = "#" + ("000000" + _this.rgbToHex(p[0], p[1], p[2])).slice(-6);
-            console.log(hex);
-            mask.style.background = `radial-gradient(${hex}, black,white)`;
-      }
-      mask.onclick = function(e){
-          var pos = _this.findPos(this);
-            var x = e.pageX - pos.x;
-            var y = e.pageY - pos.y;
-            var coord = "x=" + x + ", y=" + y;
-            // var c = this.getContext('2d');
-            // var p = c.getImageData(x, y, 1, 1).data; 
-            // var hex = "#" + ("000000" + _this.rgbToHex(p[0], p[1], p[2])).slice(-6);
-            console.log(coord);
-      }
+            console.log(x,y);
+            var color = _this.getColor(x,y,ctx);
+            _this.colorObj.color = color;
+            console.log(color);
+        }
     },
-    findPos(obj) {
+    findPos(obj){
       var curleft = 0,
         curtop = 0;
       if (obj.offsetParent) {
@@ -56,10 +93,14 @@ export default {
       }
       return undefined;
     },
-
-    rgbToHex(r, g, b) {
-      if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
-      return ((r << 16) | (g << 8) | b).toString(16);
+    getColor(x,y,ctx){
+        var pixel = ctx.getImageData(x, y, 1, 1),
+        data = pixel.data,
+        rgb = 'rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')';
+        this.colors.r = data[0];
+        this.colors.g = data[1],
+        this.colors.b = data[2];
+        return rgb
     }
   },
   mounted() {
@@ -70,16 +111,45 @@ export default {
 
 <style scoped>
 #colorpicker {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   background: white;
+
 }
-#mask {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    background: red;
-    top: -85px;
-    left: 25px;
+#canvas{
+  position: relative;
+  z-index: 100;
+  float: left;
+}
+.opacityBar{
+  position: relative;
+  width: 50px;
+  height:100px;
+  float: left;
+}
+.colorInput {
+  width: 20px;
+  height: 20px;
+}
+.colorBar {
+  width: 100px; 
+  height: 20px; 
+  position: relative;
+  bottom:0px;
+}
+.colorBar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.colorItem {
+  width: 15px;
+  height: 15px;
+  border:1px solid lightgray;
+  margin-left: 5px;
 }
 </style>

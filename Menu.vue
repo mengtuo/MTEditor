@@ -202,11 +202,12 @@ export default {
     },
     watch: {
        oddColorObj: {
+           //该方法名要保持一致
            handler(newValue, oldValue) {
     　　　　　　console.log("奇数行的样色"+newValue.color)
               this.setOddColor()
     　　　　},
-    　　　　deep: true
+    　　　　deep: true //一定要填写
        },
        evenColorObject: {
            handler(newValue, oldValue) {
@@ -241,6 +242,9 @@ export default {
         border: 1px solid lightgray;
         width: 100px;
         background: white;
+    }
+    .colorUL{
+        width: 150px;
     }
     .slideout-enter-active,.slideout-leave-active {
         transition: all .5s;
