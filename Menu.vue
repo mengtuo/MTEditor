@@ -25,8 +25,12 @@
                 <ul class="trStyle" v-show="showTrStyle">
                     <li>表格隔行变色
                         <ul class="colorUL">
-                            <li @click.stop="setOddColor">奇数行颜色 <i class="fa fa-square oddColor" @click.stop></i></li>
-                            <li @click.stop="setEvenColor">偶数行颜色 <i class="fa fa-square evenColor" @click.stop></i></li>
+                            <li @click.stop="setOddColor">奇数行颜色 
+                                <i class="fa fa-square oddColor" @click.stop="showPiker('odd')"></i>
+                            </li>
+                            <li @click.stop="setEvenColor">偶数行颜色 
+                                <i class="fa fa-square evenColor" @click.stop="showPiker('even')"></i></li>
+                            <colorpicker v-if="showColorPicker" :colorObj="colorObj" @changeColor="changeColor"/>
                         </ul>
                     </li>
                 </ul>
@@ -35,8 +39,10 @@
         </ul>
 </template>
 <script>
+import colorpicker from './colorpicker'
 export default {
     props: ['showMenu',"tapTd","tapTr","tapIndex"],
+    components: {colorpicker},
     data(){
         return {
             addMenus: ['在前面添加一行','在后面添加一行','在前面添加一列','在后面添加一列'],
@@ -44,9 +50,25 @@ export default {
             showTrStyle:false,
             showDeleteMenu:false,
             showAddMenu: false,
+            showColorPicker:false,
+            colorObj: {},
+            oddColorObj: {color:'lightgray'},
+            evenColorObject:{color:'lightcyan'}
         }
     },
     methods: {
+        showPiker(type){
+            this.showColorPicker = !this.showColorPicker;
+            if(type==='odd' && this.showColorPicker===true){
+                this.colorObj = this.oddColorObj;
+            }
+            if(type==='even' && this.showColorPicker===true){
+                this.colorObj = this.evenColorObject;
+            }
+        },
+        changeColor(){
+
+        },
         addNewOne(index,event){
             var tapTr = this.tapTr;
             switch(index){
@@ -163,7 +185,7 @@ export default {
             for(var i=0;i<currentTableChilren.length;i++){
                 if(i%2==0){
                     var item = currentTableChilren[i];
-                    item.style.backgroundColor="lightgray";
+                    item.style.backgroundColor=this.oddColorObj.color;
                 }
             }
         },
@@ -173,10 +195,26 @@ export default {
             for(var i=0;i<currentTableChilren.length;i++){
                 if(i%2==1){
                     var item = currentTableChilren[i];
-                    item.style.backgroundColor="lightcyan";
+                    item.style.backgroundColor=this.evenColorObject.color;
                 }
             }
         }
+    },
+    watch: {
+       oddColorObj: {
+           handler(newValue, oldValue) {
+    　　　　　　console.log("奇数行的样色"+newValue.color)
+              this.setOddColor()
+    　　　　},
+    　　　　deep: true
+       },
+       evenColorObject: {
+           handler(newValue, oldValue) {
+    　　　　　　 console.log("偶数行的样色"+newValue.color)
+               this.setEvenColor();
+    　　　　},
+    　　　　deep: true
+       }
     }
 }
 </script>
