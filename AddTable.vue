@@ -40,7 +40,7 @@ export default {
             tapIndex: 0,//选中的元素的下标
             tapTr: {},
             rowIndex: 0,
-
+            isTable: false
         }
     },
     methods:{
@@ -59,9 +59,11 @@ export default {
             table.setAttribute("cellspacing",0);
             table.setAttribute("border",0);
             table.onmousedown = (e)=>{
+                window.event? window.event.cancelBubble = true : e.stopPropagation();
                 this.tapTr = e.target.parentElement;
                  switch(e.button){
                     case 2: 
+                        this.isTable = true;
                         this.showMenu = true;
                         this.tapTd = e.target;
                         this.tapTr = e.target.parentElement;
@@ -69,6 +71,7 @@ export default {
                         break;
                 }
             }
+           
             var rs = '';
             for(let i=0;i<this.row;i++){
                 var tr = document.createElement("tr");
@@ -85,6 +88,16 @@ export default {
             this.range.insertNode(table);
             this.adjustList('.insertTable');
             this.resetAll();
+            table.parentElement.onmousedown = (e)=>{
+                console.log("table的父级元素");
+                switch(e.button){
+                    case 2: 
+                        console.log("在非table取邮件");
+                        this.isTable = false;
+                        break;
+                }
+            }
+
         },
         comfirmSelected(row,column,event){
             this.selectTd(row,column,event);
@@ -126,22 +139,28 @@ export default {
                 this.nextElement(ele.nextElementSibling);
             }
         },
-
-        
     },
-    mounted(){
-        var contextmenu=document.getElementById('menu');
-        document.oncontextmenu = function(ev){
-            var oEvent=ev||event;
-            //一定要加px，要不然chrom不认
-            contextmenu.style.position = "absolute";
-            contextmenu.style.top=oEvent.clientY+10+'px';
-            contextmenu.style.left=oEvent.clientX+'px';
-            contextmenu.style.display='block';
-            return false;
-        }
-        document.onclick = function(){
-            contextmenu.style.display = 'none';
+    watch: {
+        isTable(newValue){
+            if(newValue){
+                var contextmenu=document.getElementById('menu');
+                document.oncontextmenu = function(ev){
+                    var oEvent=ev||event;
+                    //一定要加px，要不然chrom不认
+                    contextmenu.style.position = "absolute";
+                    contextmenu.style.top=oEvent.clientY+10+'px';
+                    contextmenu.style.left=oEvent.clientX+'px';
+                    contextmenu.style.display='block';
+                    return false;
+                }
+                document.onclick = function(){
+                    contextmenu.style.display = 'none';
+                }
+            }else{
+                document.oncontextmenu = function(ev){
+                    return true;
+                }
+            }
         }
     }
 }

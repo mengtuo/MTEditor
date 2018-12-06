@@ -220,12 +220,16 @@ export default {
 }
 </script>
 <style scoped>
+ul {
+    list-style:none;
+}
     #menu {
         list-style: none;
         margin: 0;
         background: rgb(250, 250, 250);
         font-size: 12px;
         border: 1px solid lightgray;
+        display: none;
     }
     #menu li {
         height: 30px;

@@ -4,7 +4,8 @@ Vue.mixin({
         return {
             show: false,
             currentSelection:{},
-            range: {}
+            range: {},
+            isTable:false
         }
     },
     methods: {
@@ -94,8 +95,10 @@ Vue.mixin({
             }else{
                 document.removeEventListener('click',this.test)
             }
-        }
+        },
+        
     },
+
     created(){
         // this.backupRange();
     }
