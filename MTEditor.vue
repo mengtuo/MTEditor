@@ -113,6 +113,15 @@
                         </i>
                     </li>
                     <li>
+                         <i class="fa fa-code" 
+                            onmousedown="event.preventDefault();" 
+                            @click="execCommand('code')"
+                            title="插入代码"    
+                        >
+                        </i>
+                        
+                    </li>
+                    <li>
                         <i class="fa fa-smile-o" 
                             onmousedown="event.preventDefault();" 
                             @click="execCommand('subscript')"

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import colorsImg from "./images/colors.png";
 export default {
   props: ["colorObj"],
   data(){

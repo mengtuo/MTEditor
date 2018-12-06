@@ -1,11 +1,16 @@
 
-注册插件
+## install plugin
+
+```
+npm install --save mteditor
+```
+## register plugin
+register plugin in main.js
 ```
 import MTEditor from 'MTEditor'
 Vue.use(MTEditor);
 ```
-在页面中使用
-
+## useage
 ```     
 <mt-editor></mt-editor>
 

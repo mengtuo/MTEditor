@@ -1,0 +1,22 @@
+{
+  "name": "mteditor",
+  "version": "1.0.0",
+  "description": "注册插件\r ```\r import MTEditor from 'MTEditor'\r Vue.use(MTEditor);\r ```\r 在页面中使用",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengtuo/MTEditor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mengtuo/MTEditor/issues"
+  },
+  "homepage": "https://github.com/mengtuo/MTEditor#readme",
+  "dependencies": {
+    "font-awesome": "^4.7.0"
+  }
+}
