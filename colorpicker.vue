@@ -3,10 +3,10 @@
     <canvas id="canvas" width="100" height="100"></canvas>
     <div class="opacityBar">
       <ul>
-        <li>R <input type="text" class="colorInput" v-model="colors.r"></li>
-        <li>G <input type="text" class="colorInput" v-model="colors.g"></li>
-        <li>B <input type="text" class="colorInput" v-model="colors.b"></li>
-        <li>A <input type="text" class="colorInput" v-model="colors.a"></li>
+        <li>R <input type="text" class="colorInput" v-model.number="colors.r"></li>
+        <li>G <input type="text" class="colorInput" v-model.number="colors.g"></li>
+        <li>B <input type="text" class="colorInput" v-model.number="colors.b"></li>
+        <li>A <input type="text" class="colorInput" v-model.number="colors.a"></li>
       </ul>
     </div>
     <div class="colorBar">
@@ -17,6 +17,9 @@
         <li class="colorItem" style="background-color:black" @click="colorObj.color='black'"></li>
         <li class="colorItem" style="background-color:white" @click="colorObj.color='white'"></li>
       </ul>
+    </div>
+    <div class="alphaSlide">
+      透明度<input type="range" max="1" min="0" step="0.01" v-model.number="colors.a" style="width:80px">
     </div>
   </div>
 </template>
@@ -37,7 +40,6 @@ export default {
   },
   computed: {
     RGB(){
-      this.colorObj.color = `rgba(${this.colors.r},${this.colors.g},${this.colors.b},${this.colors.a})`;
       return `rgba(${this.colors.r},${this.colors.g},${this.colors.b},${this.colors.a})`
     }
   },
@@ -49,13 +51,13 @@ export default {
         var canvas = document.getElementById("canvas");
         var ctx = canvas.getContext('2d');
         var r = 50;
-        var width = canvas.width;
-        var height = canvas.height;
-        canvas.style.width = width + "px";
-        canvas.style.height = height+"px";
-        canvas.height = height*window.devicePixelRatio;
-        canvas.width = width*window.devicePixelRatio;
-        ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+        // var width = canvas.width;
+        // var height = canvas.height;
+        // canvas.style.width = width + "px";
+        // canvas.style.height = height+"px";
+        // canvas.height = height*window.devicePixelRatio;
+        // canvas.width = width*window.devicePixelRatio;
+        // ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
         for (var i = 0; i < 360; i += .1) {
                 //获取度数
                 var rad = i * (2 * Math.PI) / 360,
@@ -100,7 +102,17 @@ export default {
         this.colors.r = data[0];
         this.colors.g = data[1],
         this.colors.b = data[2];
+        this.colors.a = 1;
         return rgb
+    }
+  },
+  watch: {
+    colors:{
+      handler(newValue,oldValue){
+          console.log(newValue);
+          this.colorObj.color = `rgba(${newValue.r},${newValue.g},${newValue.b},${newValue.a})`;
+      },
+      deep:true
     }
   },
   mounted() {
@@ -110,11 +122,16 @@ export default {
 </script>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
 #colorpicker {
-  width: 150px;
+  width: 100%;
   height: 150px;
   background: white;
-
+  padding-left: 5px;
+  box-sizing: border-box;
 }
 #canvas{
   position: relative;
@@ -123,19 +140,19 @@ export default {
 }
 .opacityBar{
   position: relative;
-  width: 50px;
+  width: 80px;
   height:100px;
   float: left;
 }
 .colorInput {
-  width: 20px;
+  width: 40px;
   height: 20px;
 }
 .colorBar {
   width: 100px; 
   height: 20px; 
   position: relative;
-  bottom:0px;
+  clear: both;
 }
 .colorBar ul {
   list-style: none;
@@ -151,5 +168,12 @@ export default {
   height: 15px;
   border:1px solid lightgray;
   margin-left: 5px;
+}
+.alphaSlide {
+  width: 100%;
+  height: 20px;
+  position: relative;
+  
+  clear: both;
 }
 </style>

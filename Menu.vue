@@ -24,12 +24,12 @@
                 <transition name="slideout">
                 <ul class="trStyle" v-show="showTrStyle">
                     <li>表格隔行变色
-                        <ul class="colorUL">
+                        <ul class="colorUL" id="colorUL">
                             <li @click.stop="setOddColor">奇数行颜色 
-                                <i class="fa fa-square oddColor" @click.stop="showPiker('odd')"></i>
+                                <i class="fa fa-square" :style="{color:oddColorObj.color}" @click.stop="showPiker('odd')"></i>
                             </li>
                             <li @click.stop="setEvenColor">偶数行颜色 
-                                <i class="fa fa-square evenColor" @click.stop="showPiker('even')"></i></li>
+                                <i class="fa fa-square" :style="{color:evenColorObject.color}" @click.stop="showPiker('even')"></i></li>
                             <colorpicker v-if="showColorPicker" :colorObj="colorObj" @changeColor="changeColor"/>
                         </ul>
                     </li>
@@ -244,7 +244,10 @@ export default {
         background: white;
     }
     .colorUL{
-        width: 150px;
+        width: 200px;
+    }
+    #colorUL li {
+        width: 200px;
     }
     .slideout-enter-active,.slideout-leave-active {
         transition: all .5s;
