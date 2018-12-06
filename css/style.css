@@ -1,9 +1,8 @@
 * {
     margin-left: 0;
     padding: 0;
-    list-style: none;
 }
-ul {
+ul,ol{
     margin-left: 10px;
 }
 .btn {

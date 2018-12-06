@@ -55,13 +55,36 @@ Vue.mixin({
                 if (parentNode.tagName === 'P' && parentNode.firstChild.tagName==="TABLE") {
                     console.log("table会进来的");
                     parentNode.insertAdjacentElement('beforebegin', ele);
-                    parentNode.remove()
+                    // parentNode.remove()
+                    this.removeNode(parentNode);
                 }
             }    
         },
         test(){
             this.show = false;
-        }
+        },
+        //根据浏览器的不同添加不同的移除方法
+        removeNode(obj){
+        　　if(this.isIE()||this.isIE11()){
+            　　　　obj.removeNode(true);
+        　　}else{
+            　　　 obj.remove();
+            }
+        },
+        isIE(){
+        　　if(!!window.ActiveXObject || "ActiveXObject" in window){
+        　　　　return true;
+        　　}else{
+        　　　　return false;
+        　　}
+        } ,
+        isIE11(){
+        　　if((/Trident\/7\./).test(navigator.userAgent)){
+            　　　　return true;
+            　　}else{
+            　　　　return false;
+            　　}
+            }   
     },
     watch: {
         show(value){

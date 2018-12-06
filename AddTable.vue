@@ -81,7 +81,7 @@ export default {
                 table.appendChild(tr);
 
             }
-            table.append(innerDom);
+            table.appendChild(innerDom);
             this.range.insertNode(table);
             this.adjustList('.insertTable');
             this.resetAll();
