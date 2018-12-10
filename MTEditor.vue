@@ -1,7 +1,14 @@
 <template>
-    <div id="MTEditor">
+    <div id="MTEditor" ref="MTEditor">
         <div class="MTEditor-header">
                 <ul>
+                    <!-- <li style="text-align:center">
+                        <i class="fa fa-file-code-o"
+                            onmousedown="event.preventDefault();" 
+                            @click="showcodeView=!showcodeView"
+                            title="预览"
+                        ></i>
+                    </li> -->
                     <li>
                        <edHeader :showChild="showChild"/>
                     </li>
@@ -153,20 +160,18 @@
                         >
                         </i>
                     </li>
-                    <!-- 
-                        <i class="fa fa-font"></i></li>
-                    <li><i class="fa fa-quote-left"></i></li>
-                      <li>
-                        <i class="fa fa-undo"></i>
-                    </li>
-                    <li>
-                        <i class="fa fa-repeat"></i>
-                    </li> -->
                 </ul>
         </div>
         <div class="MTEditor-content" >
-            <div id="text_area" contenteditable=true v-focus ref="richEdit"></div>
+            <div  id="text_area" 
+            contenteditable=true v-focus 
+            ref="richEdit" 
+            @input="code=$event.target.innerHTML,$emit('input',$event.target.innerHTML)"
+            ></div>
         </div>
+        <transition name="fade">
+            <div v-if="saved" class="savedConfirm" ref="saved">已保存到本地</div>
+        </transition>
     </div>
 </template>
 <script>
@@ -183,7 +188,12 @@ export default {
             content: ``,
             showChild: false,
             selectedUnorder:false,
-            selectedOrdered:false
+            selectedOrdered:false,
+            textValue:'',
+            showcodeView:false,
+            code:'',//保存到本地的代码
+            saved: false,
+            timeOut: null,
         }
     },
     components: {
@@ -202,12 +212,29 @@ export default {
         // 显示
         showHeader(){
 
+        },
+        myClearTimeout(){
+            clearTimeout(this.timeOut);
+        },
+        myInterval(func,time){
+            
+            this.timeOut = setTimeout(()=>{
+                clearTimeout(this.timeOut);
+                func();
+                this.myInterval(func,time);
+            },time)
         }
     },
     mounted(){
         var richEdit = this.$refs.richEdit;
         richEdit.innerHTML = `<p><br></p> `;
-        
+        this.myInterval(()=>{
+            this.saved = true;
+            localStorage.setItem("code",richEdit.innerHTML)
+            setTimeout(() => {
+                this.saved = false;
+            }, 4000);
+        },30000);
     },
     directives: {
     focus: {
@@ -220,6 +247,12 @@ export default {
 </script>
 
 <style scoped>
+    .fade-enter-active,.fade-leave-active {
+        transition: all 0.5s;
+    }
+    .fade-enter,.fade-leave-to {
+        opacity: 0;
+    }
     * {
         margin: 0;
         padding: 0;
@@ -258,7 +291,7 @@ export default {
         box-sizing: border-box;
         overflow-y: scroll;
     }
-    #text_area{
+    #text_area,#coldView{
         width: 100%;
         height: 100%;
         outline: none;
@@ -266,11 +299,22 @@ export default {
         resize: none;
         padding: 0;
         text-align: left;
+        box-sizing: border-box
+    }
+    .text_area>p {
+        padding: 0;
     }
     .icons {
         width: 24px;
         height: 24px;
-        /* background: url("./css_sprites.png") no-repeat; */
-        
+        /* background: url("./css_sprites.png") no-repeat; */ 
+    }
+    .savedConfirm{
+        width: 100px;
+        height: 50px;
+        background: lightblue;
+        position: absolute;
+        bottom: 0;
+        right: 10px;
     }
 </style>

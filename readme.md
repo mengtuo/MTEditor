@@ -12,6 +12,9 @@ Vue.use(MTEditor);
 ```
 ## useage
 ```     
-<mt-editor></mt-editor>
+<mt-editor v-model="message"></mt-editor>
 
+data: {
+    message: ''
+}
 ```
