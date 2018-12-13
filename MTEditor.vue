@@ -78,7 +78,7 @@
                     </li>
                     <li>
                         <!-- 插入图片 -->
-                        <addImage/>
+                        <addImage :currentSelect="currentSelection"/>
                     </li>
                     <li>
                        
@@ -166,6 +166,7 @@
             <div  id="text_area" 
             contenteditable=true v-focus 
             ref="richEdit" 
+            @blur="backupRange()"
             @input="code=$event.target.innerHTML,$emit('input',$event.target.innerHTML)"
             ></div>
         </div>
@@ -177,7 +178,7 @@
 <script>
 import './css/font-awesome.min.css'
 import edHeader from './Header'
-import addImage from './AddImage'
+import addImage from './AddImage/AddImage'
 import addLink from './AddLink'
 import addTable from './AddTable'
 export default {
@@ -194,6 +195,7 @@ export default {
             code:'',//保存到本地的代码
             saved: false,
             timeOut: null,
+            currentSelection:{},//保留上次光标所在的位置
         }
     },
     components: {

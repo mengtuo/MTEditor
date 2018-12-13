@@ -3,7 +3,6 @@ Vue.mixin({
     data(){
         return {
             show: false,
-            currentSelection:{},
             range: {},
             isTable:false
         }
@@ -17,34 +16,31 @@ Vue.mixin({
         },
          // 保留光标所在位置
          backupRange() {
+             console.log("保留光标所在位置");
             let selection = window.getSelection();
             let range = selection.getRangeAt(0);
             this.range = selection.getRangeAt(0);
-            console.log(range);
+            console.log(range.startContainer);
             this.currentSelection = {
                 "startContainer": range.startContainer,
                 "startOffset": range.startOffset,
                 "endContainer": range.endContainer,
                 "endOffset": range.endOffset
             }
+            localStorage.setItem("currentSelection",JSON.stringify(this.currentSelection))
         },
-        restoreRange() {
-            if (this.currentSelection) {
-
+        restoreRange(currentSelection) {
                 let selection = window.getSelection();
-                console.log(selection);
                 selection.removeAllRanges();
-
                 let range = document.createRange();
+                
+                range.setStart(currentSelection.startContainer, currentSelection.startOffset);
 
-                range.setStart(this.currentSelection.startContainer, this.currentSelection.startOffset);
-
-                range.setEnd(this.currentSelection.endContainer, this.currentSelection.endOffset);
+                range.setEnd(currentSelection.endContainer, currentSelection.endOffset);
 
                 // 向选区中添加一个区域
 
                 selection.addRange(range);  
-            }
 
         },
          adjustList(typeName) {
@@ -85,7 +81,18 @@ Vue.mixin({
             　　}else{
             　　　　return false;
             　　}
-            }   
+        },
+        getObjectURL(file) {
+            var url = null;
+            if (window.createObjectURL != undefined) {
+                url = window.createObjectURL(file);
+            } else if (window.URL != undefined) {
+                url = window.URL.createObjectURL(file);
+            } else if (window.webkitURL != undefined) {
+                url = window.webkitURL.createObjectURL(file);
+            }
+            return url;
+        },   
     },
     watch: {
         show(value){

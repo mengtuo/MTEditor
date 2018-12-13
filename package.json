@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mengtuo/MTEditor#readme",
   "dependencies": {
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "axios": "^0.18.0"
   }
 }
