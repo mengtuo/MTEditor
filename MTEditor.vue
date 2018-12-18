@@ -176,7 +176,7 @@
     </div>
 </template>
 <script>
-import './node_modules/font-awesome/css/font-awesome.min.css'
+import '../font-awesome/css/font-awesome.min.css'
 import edHeader from './Header'
 import addImage from './AddImage/AddImage'
 import addLink from './AddLink'

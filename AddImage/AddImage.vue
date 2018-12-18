@@ -77,8 +77,8 @@ export default {
 .imageBox {
   margin: 0 auto;
   margin-top: 60px;
-  width: 50%;
-  height: 50%;
+  width: 600px;
+  height: 333px;
   background: white;
   border: 1px solid lightgray;
   border-radius: 5px;
