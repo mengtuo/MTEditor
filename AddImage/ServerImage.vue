@@ -9,6 +9,16 @@
                 <input type="text" id="serverAddress" class="address" v-model="address">
             </div>
              <div class="addIcon" ref="addIcon">
+                 <ul>
+                     <li v-for="(item,key) in imagesTarget" 
+                      :key="key"
+                      >
+                        <div class="imgDiv" v-html="item.outerHTML"></div>
+                        <div class="imgCover">
+                            <i class="fa fa-times-circle-o" @click="deleteURL(key)"></i>
+                        </div>
+                     </li>
+                 </ul>
                 <label for="localSource" class="localSourceLabel" ref="localLabel" v-show="files.length<3">
                     <i class="fa fa-cloud-upload" aria-hidden="true"></i>
                 </label>
@@ -17,7 +27,8 @@
             <div class="results">
                 <ul>
                     <li v-for="(item,key) in imageURLS" :key="key">
-                        图片{{key+1}}:{{baseURL+item}}
+                        <span>图片{{key+1}}:{{baseURL+item}}</span>
+                        <button class="btn danger" style="height:20px;width:40px;" @click="deleteURL(key)">删除</button>
                     </li>
                 </ul>
             </div>
@@ -38,14 +49,18 @@ export default {
             address: '',
             files: [],
             imageURLS:[],
-            baseURL: 'http://localhost:3000'
+            baseURL: 'http://localhost:3000',
+            imagesTarget: [],
+            showDelete: false
+
         }
     },
-    handleClose(){
-        this.$parent.show = false;
-    },
+    
     methods: {
-          // 选择图片
+        handleClose(){
+            this.$parent.show = false;
+        },
+            // 选择图片
         selectFile(event) {
             console.log("测试");
             var e = event || window.event;
@@ -61,23 +76,35 @@ export default {
             var addIcon = this.$refs.addIcon;
             console.log("选择图片");
             console.log(this.files);
-            this.previewImage(files, addIcon);
+            this.previewImage(this.files, addIcon);
         },
         async previewImage(files, target) {
             this.showPreview = true;
             var localLabel = this.$refs.localLabel;
-            for (var i = 0; i < files.length; i++) {
-                var url = this.getObjectURL(files[i]);
+            for (var i = 0; i < this.files.length; i++) {
+                var url = this.getObjectURL(this.files[i]);
                 var image = new Image();
                 image.src = url;
+                image.name = this.files[i].name;
                 image.style.cssText = "width:auto;height:100%";
-                var p = await new Promise((resolve, reject) => {
-                image.onload = function() {
-                    // target.appendChild(image);
-                    target.insertBefore(image,localLabel)
-                    resolve();
-                };
-            });
+                var isSaved = false;
+                for(var j=0;j<this.imagesTarget.length;j++){
+                    var imgTarget = this.imagesTarget[j];
+                    if(imgTarget.name == image.name){
+                        isSaved = true;
+                        break;
+                    }
+                }
+                if(!isSaved){
+                    this.imagesTarget.push(image);
+                }
+                // var p = await new Promise((resolve, reject) => {
+                // image.onload = function() {
+                //     // target.appendChild(image);
+                //     target.insertBefore(image,localLabel)
+                //     resolve();
+                // };
+            // });
         }
         },
         startUpload(){
@@ -92,9 +119,12 @@ export default {
             .then((resp)=>{
                 console.log(resp);
                 // this.imageAddress = resp.data.imageAddress;
+                /**
+                 * 判断预览图片里是否已经有该图片
+                 */
                 this.imageURLS = resp.data.imgPaths;
                 //请求添加成功之后,重新发起请求,获取彩种的列表
-                this.handleClose();
+                // this.handleClose();
             }).catch((error)=>{
                 console.log(error);
             })
@@ -104,7 +134,16 @@ export default {
             for (var key in this.imageURLS) {
                 this.execCommand("insertImage", this.baseURL+this.imageURLS[key]);
             }
+            this.handleClose();
         },
+        deleteURL(index){
+            //删除地址
+            this.imageURLS.splice(index,1);
+            // 删除图片对应的文件对象
+            this.files.splice(index,1);
+            // 删除预览图片
+            this.imagesTarget.splice(index,1)
+        }
     }
 }
 </script>
@@ -155,6 +194,23 @@ export default {
   color: rgb(140, 230, 244);
   padding-left: 10px;
 } 
+.addIcon ul {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.addIcon ul li {
+    height: 100%;
+}
+.addIcon ul li img {
+    height: 100%;
+}
+.imgDiv {
+    height: 100%;
+}
+.imgDiv img {
+    height: 100%;
+}
 /* 上传结果 */
 .results{
     width: 100%;
@@ -173,9 +229,19 @@ export default {
     line-height: 30px;
     margin-top: 5px;
     box-sizing: border-box;
-    background: lightblue;
+    background: rgb(211, 215, 216);
 }
 
+/* 划过删除图片 */
+.imgCover {
+    width: 100%;
+    height: 100%;
+    background: red;
+    z-index: 102;
+    font-size: 14px;
+    margin-top: -100px;
+    text-align: right;
+}
 #localSource {
   display: none;
 }
