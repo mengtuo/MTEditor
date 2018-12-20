@@ -1,3 +1,5 @@
+## vue rich text editor
+    vue富文本编辑器
 
 ## install plugin
 
