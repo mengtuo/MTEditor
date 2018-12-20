@@ -78,11 +78,11 @@
                     </li>
                     <li>
                         <!-- 插入图片 -->
-                        <addImage :currentSelect="currentSelection"/>
+                        <addImage :currentSelect="currentSelection" :range="range"/>
                     </li>
                     <li>
                        
-                        <addTable/>
+                        <addTable :range="range"/>
                     </li>
                     <li>
                         <addLink/>
@@ -165,11 +165,13 @@
         <div class="MTEditor-content" >
             <div  id="text_area" 
             contenteditable=true v-focus 
-            ref="richEdit" 
-            @blur="backupRange()"
+            ref="richEdit"
+            @blur="backupRange('输入框失去焦点')" 
             @input="code=$event.target.innerHTML,$emit('input',$event.target.innerHTML)"
+            @mousedown="mousedown"
             ></div>
         </div>
+        <image-menu v-show="isImage"/>
         <transition name="fade">
             <div v-if="saved" class="savedConfirm" ref="saved">已保存到本地</div>
         </transition>
@@ -181,6 +183,7 @@ import edHeader from './Header'
 import addImage from './AddImage/AddImage'
 import addLink from './AddLink'
 import addTable from './AddTable'
+import imageMenu from './ContextMenu/imageMenu'
 export default {
     name: 'mt-editor',
     data(){
@@ -196,24 +199,20 @@ export default {
             saved: false,
             timeOut: null,
             currentSelection:{},//保留上次光标所在的位置
+            isImage: false, //右键选中的是否是图片
+            range: {},//光标信息
         }
     },
     components: {
         edHeader,
         addImage,
         addLink,
-        addTable
+        addTable,
+        imageMenu
     },
     methods: {
         execCommand:(command,value) => {
 		    value? document.execCommand(command, false, value):document.execCommand(command, false, null)
-		},
-        insertTable(){
-            console.log("插入表格");
-        },
-        // 显示
-        showHeader(){
-
         },
         myClearTimeout(){
             clearTimeout(this.timeOut);
@@ -225,10 +224,57 @@ export default {
                 func();
                 this.myInterval(func,time);
             },time)
-        }
+        },
+        mousedown(event){
+            var tagName = event.target.tagName;
+            switch(event.button){
+                case 2: 
+                    if(tagName==='IMG'){
+                        console.log("为什么不显示呢?");
+                        console.log("选中图片,显示图片相关的选项");
+                        console.log("试一试");
+                        console.log(this);
+                        this.isImage = true;
+                    }
+                    break;
+            }
+        },
+         // 保留光标所在位置
+         backupRange(text) {
+            console.log(text);
+            let selection = window.getSelection();
+            let range = selection.getRangeAt(0);
+            console.log(range);
+            this.range = selection.getRangeAt(0);
+            console.log(range.startContainer);
+            this.currentSelection = {
+                "startContainer": range.startContainer,
+                "startOffset": range.startOffset,
+                "endContainer": range.endContainer,
+                "endOffset": range.endOffset
+            }
+            localStorage.setItem("currentSelection",JSON.stringify(this.currentSelection))
+        },
+        
+        test(){
+            this.show = false;
+        },
+        
+        getObjectURL(file) {
+            var url = null;
+            if (window.createObjectURL != undefined) {
+                url = window.createObjectURL(file);
+            } else if (window.URL != undefined) {
+                url = window.URL.createObjectURL(file);
+            } else if (window.webkitURL != undefined) {
+                url = window.webkitURL.createObjectURL(file);
+            }
+            return url;
+        },
     },
     mounted(){
         var richEdit = this.$refs.richEdit;
+        console.log(richEdit);
         richEdit.innerHTML = `<p><br></p> `;
         this.myInterval(()=>{
             this.saved = true;

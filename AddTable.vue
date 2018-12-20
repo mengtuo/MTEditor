@@ -3,7 +3,7 @@
          <i class="fa fa-table" 
             onmousedown="event.preventDefault();" 
             title="插入表格"
-            @click="show=!show"    
+            @click="show=!show,richEditBlur()"    
         >
         </i>
         <div v-show="show"  @click.stop class="newTable">
@@ -30,6 +30,7 @@
 <script>
 import Menu from './Menu'
 export default {
+    props: ['range'],
     components: {Menu},
     data(){
         return {

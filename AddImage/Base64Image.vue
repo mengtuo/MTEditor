@@ -1,10 +1,15 @@
 <template>
-   <div class="localUpdate">
+   <div class="localUpdate" @click.stop>
         <div class="addIcon" style="height:50px">
             <label for="uploadSource">
             <i class="fa fa-cloud-upload" aria-hidden="true"></i>
             </label>
             <input type="file" id="uploadSource" multiple="multiple" @change="selectFile">
+        </div>
+        <div>
+            <span>图片尺寸</span>
+            宽 <input  type="number" size=4 v-model.number="imgWidth">
+            高 <input  type="number" size=5 v-model.number="imgHeight">
         </div>
         <div class="preview" ref="preview"></div>
         <div class="uploadFooter">
@@ -15,7 +20,13 @@
 </template>
 <script>
 export default {
-    props: ['currentSelect'],
+    props: ['currentSelect','range'],
+    data(){
+        return {
+            imgHeight: 100,
+            imgWidth: 100
+        }
+    },
     methods: {
         handleClose(){
             this.$parent.show = false;
@@ -29,6 +40,9 @@ export default {
         },
         // 将图片插入到内容中
         async insertImage(type) {
+            console.log(this.range);
+            var innerDom = this.range.extractContents();
+            console.log(innerDom);
              this.restoreRange(this.currentSelect);
              for (var i = 0; i < this.files.length; i++) {
                 var file = this.files[i];
@@ -36,7 +50,16 @@ export default {
                 reader.readAsDataURL(file);
                 await new Promise((resolve, reject) => {
                     reader.onload = e => {
-                    this.execCommand("insertImage", e.target.result);
+                    var img = document.createElement("img");
+                    img.className = 'inertImage'
+                    img.src =  e.target.result;
+                    img.width = this.imgWidth==0?'auto':this.imgWidth;
+                    img.height = this.imgHeight==0?'auto':this.imgHeight;
+                    img.appendChild(innerDom);
+                    this.range.insertNode(img);
+                    this.adjustList('.inertImage');
+                    // this.resetAll();
+                    // this.execCommand("insertImage", e.target.result);
                     resolve();
                     };
                 });

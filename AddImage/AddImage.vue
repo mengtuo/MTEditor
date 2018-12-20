@@ -1,8 +1,8 @@
 <template>
   <div id="addNewImage">
-    <i class="fa fa-image" onmousedown="event.preventDefault();" title="插入图片" @click="show=!show"></i>
-    <div v-if="show" class="coverLayer" @click.stop="handleClose">
-      <div class="imageBox" @click.stop>
+    <i class="fa fa-image" onmousedown="event.preventDefault();" title="插入图片" @click="show=!show,richEditBlur()"></i>
+    <div v-show="show" class="coverLayer" @click.stop.prevent="handleClose">
+      <div class="imageBox" @click.stop.prevent>
         <div class="boxTop">
           <span>插入图片</span>
           <span>
@@ -27,9 +27,9 @@
           <i class="fa fa-question"></i>
           </li>
         </ul>
-        <base64IMG v-show="currentIndex==1" :currentSelect="currentSelect"></base64IMG>
-        <onlineImage v-show="currentIndex==2" :currentSelect="currentSelect"></onlineImage>
-        <server-image v-show="currentIndex==3" :currentSelect="currentSelect"></server-image>
+        <base64IMG v-if="currentIndex==1" :currentSelect="currentSelect" @click.stop :range="range"></base64IMG>
+        <onlineImage v-if="currentIndex==2" :currentSelect="currentSelect" @click.stop :range="range"></onlineImage>
+        <server-image v-if="currentIndex==3" :currentSelect="currentSelect" @click.stop :range="range"></server-image>
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@ import base64IMG from './Base64Image'
 import onlineImage from './onlineImage'
 import ServerImage from './ServerImage'
 export default {
-  props: ['currentSelect'],
+  props: ['currentSelect','range'],
   components: {base64IMG,onlineImage,ServerImage},
   data() {
     return {
