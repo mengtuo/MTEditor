@@ -7,9 +7,9 @@
             <input type="file" id="uploadSource" multiple="multiple" @change="selectFile">
         </div>
         <div>
-            <span>图片尺寸</span>
-            宽 <input  type="number" size=4 v-model.number="imgWidth">
-            高 <input  type="number" size=5 v-model.number="imgHeight">
+            宽 <input  type="number" style="width:40px" v-model.number="imgWidth">
+            <i :class="{fa:true,'fa-link':isLink,'fa-unlink':!isLink}" @click="isLink=!isLink"></i>
+            高 <input  type="number" style="width:40px" v-model.number="imgHeight">            
         </div>
         <div class="preview" ref="preview"></div>
         <div class="uploadFooter">
@@ -23,8 +23,9 @@ export default {
     props: ['currentSelect','range'],
     data(){
         return {
-            imgHeight: 100,
-            imgWidth: 100
+            imgHeight: 0,
+            imgWidth: 0,
+            isLink: true
         }
     },
     methods: {
@@ -50,17 +51,20 @@ export default {
                 reader.readAsDataURL(file);
                 await new Promise((resolve, reject) => {
                     reader.onload = e => {
-                    var img = document.createElement("img");
-                    img.className = 'inertImage'
-                    img.src =  e.target.result;
-                    img.width = this.imgWidth==0?'auto':this.imgWidth;
-                    img.height = this.imgHeight==0?'auto':this.imgHeight;
-                    img.appendChild(innerDom);
-                    this.range.insertNode(img);
-                    this.adjustList('.inertImage');
-                    // this.resetAll();
-                    // this.execCommand("insertImage", e.target.result);
-                    resolve();
+                        var img = document.createElement("img");
+                        img.className = 'inertImage'
+                        img.src =  e.target.result;
+                        // 关联计算图片的宽高
+                        if(this.isLink){
+
+                        }
+                        img.style.width = this.imgWidth==0?'auto':this.imgWidth+'px';
+                        img.style.height = this.imgHeight==0?'auto':this.imgHeight+'px';
+                        img.appendChild(innerDom);
+                        this.range.insertNode(img);
+                        this.adjustList('.inertImage');
+                        // this.resetAll();
+                        resolve();
                     };
                 });
             }
@@ -68,12 +72,17 @@ export default {
         },
         async previewImage(files, target) {
             for (var i = 0; i < files.length; i++) {
+                var div = document.createElement("div");
                 var url = this.getObjectURL(files[i]);
                 var image = new Image();
                 image.src = url;
-                image.style.cssText = "width:100px;";
+                image.style.cssText = "width:160px;";
                 var p = await new Promise((resolve, reject) => {
-                image.onload = function() {
+                image.onload = ()=> {
+                    console.log(image.width);
+                    this.imgHeight = image.height;
+                    this.imgWidth = image.width;
+                    console.log(image.height);
                     target.appendChild(image);
                     resolve();
                 };
@@ -95,6 +104,9 @@ export default {
     },
     created(){
         // this.backupRange();
+    },
+    watch: {
+       
     }
 }
 </script>

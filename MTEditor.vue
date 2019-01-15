@@ -1,6 +1,6 @@
 <template>
     <div id="MTEditor" ref="MTEditor">
-        <div class="MTEditor-header">
+        <div class="MTEditor-header" @click="focusEditor">
                 <ul>
                     <!-- <li style="text-align:center">
                         <i class="fa fa-file-code-o"
@@ -12,66 +12,63 @@
                     <li>
                        <edHeader :showChild="showChild"/>
                     </li>
-                    <li>
+                    <li @click.stop="execCommand('bold')" onmousedown="event.preventDefault()" >
                         <i class="fa fa-bold" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('bold')"
                             title="加粗"
                             >
                         </i>
                     </li>
-                    <li>
+                    <li onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('italic')">
                         <i class="fa fa-italic" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('italic')"
+                            
                             title="斜体"
                             >
                         </i>
                     </li>
-                    <li>
+                    <li  onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('underline')">
                         <i class="fa fa-underline" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('underline')"
+                           
                             title="下划线"
                             >
                         </i>
                     </li>
-                    <li>
+                    <li  onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('strikethrough')">
                         <i class="fa fa-strikethrough" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('strikethrough')"
                             title="删除线"
                             >
                         </i>
                     </li>
-                    <li>
+                    <li  onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('justifyLeft')">
                         <i class="fa fa-align-left" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('justifyLeft')"
+                           
                             title="居左"    
                         >
                         </i>
                     </li>
-                    <li>
+                    <li onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('justifyCenter')">
                         <i class="fa fa-align-center" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('justifyCenter')"
+                            
                             title="居中"    
                         >
                         </i>
                     </li>
-                    <li>
+                    <li onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('justifyRight')">
                         <i class="fa fa-align-right" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('justifyRight')"
+                            
                             title="居右"    
                         >
                         </i>
                     </li>
-                    <li>
+                    <li onmousedown="event.preventDefault();" 
+                            @click.stop="execCommand('justifyFull')">
                         <i class="fa fa-align-justify" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('justifyFull')"
+                            
                             title="两侧"    
                         >
                         </i>
@@ -85,12 +82,12 @@
                         <addTable :range="range"/>
                     </li>
                     <li>
-                        <addLink/>
+                        <addLink :range="range"/>
                     </li>
                     <li>
                         <i class="fa fa-list-ul" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('InsertUnorderedList')"
+                            @click.stop="execCommand('InsertUnorderedList')"
                             title="无序列表"    
                         >
                         </i>
@@ -98,7 +95,7 @@
                     <li>
                     <i class="fa fa-list-ol" 
                             onmousedown="event.preventDefault();" 
-                            @click="execCommand('insertOrderedList')"
+                            @click.stop="execCommand('insertOrderedList')"
                             title="有序列表"
                         >
                         </i>
@@ -185,6 +182,9 @@ import addLink from './AddLink'
 import addTable from './AddTable'
 import imageMenu from './ContextMenu/imageMenu'
 export default {
+    props:{
+
+    },
     name: 'mt-editor',
     data(){
         return {
@@ -218,7 +218,6 @@ export default {
             clearTimeout(this.timeOut);
         },
         myInterval(func,time){
-            
             this.timeOut = setTimeout(()=>{
                 clearTimeout(this.timeOut);
                 func();
@@ -230,10 +229,6 @@ export default {
             switch(event.button){
                 case 2: 
                     if(tagName==='IMG'){
-                        console.log("为什么不显示呢?");
-                        console.log("选中图片,显示图片相关的选项");
-                        console.log("试一试");
-                        console.log(this);
                         this.isImage = true;
                     }
                     break;
@@ -271,6 +266,12 @@ export default {
             }
             return url;
         },
+        // 鼠标点击头部的空白地区的时候默认让输入框
+        focusEditor(){
+            console.log("点击空白地方");
+            var richEdit = this.$refs['richEdit'];
+            richEdit.focus();
+        }
     },
     mounted(){
         var richEdit = this.$refs.richEdit;
@@ -328,6 +329,7 @@ export default {
         height: 24px;
         margin: 5px;
         color: gray;
+        text-align: center;
     }
     .MTEditor-header ul li:hover {
         color: black;

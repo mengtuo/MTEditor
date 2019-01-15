@@ -3,7 +3,7 @@
          <i class="fa fa-table" 
             onmousedown="event.preventDefault();" 
             title="插入表格"
-            @click="show=!show,richEditBlur()"    
+            @click.stop="show=!show,richEditBlur()"    
         >
         </i>
         <div v-show="show"  @click.stop class="newTable">

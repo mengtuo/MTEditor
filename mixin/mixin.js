@@ -18,11 +18,8 @@ Vue.mixin({
             selection.removeAllRanges();
             let range = document.createRange();
             range.setStart(currentSelection.startContainer, currentSelection.startOffset);
-
             range.setEnd(currentSelection.endContainer, currentSelection.endOffset);
-
             // 向选区中添加一个区域
-
             selection.addRange(range);
         },
 

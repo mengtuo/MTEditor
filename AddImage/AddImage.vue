@@ -1,7 +1,7 @@
 <template>
   <div id="addNewImage">
     <i class="fa fa-image" onmousedown="event.preventDefault();" title="插入图片" @click="show=!show,richEditBlur()"></i>
-    <div v-show="show" class="coverLayer" @click.stop.prevent="handleClose">
+    <div v-if="show" class="coverLayer" @click.stop.prevent="handleClose">
       <div class="imageBox" @click.stop.prevent>
         <div class="boxTop">
           <span>插入图片</span>

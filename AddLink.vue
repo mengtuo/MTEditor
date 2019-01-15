@@ -3,7 +3,7 @@
         <i class="fa fa-link" 
         onmousedown="event.preventDefault();" 
         title="插入链接"
-        @click="show=!show"></i>
+        @click.stop="show=!show"></i>
         <transition name="link">
             <div  v-show="show" class="linkList"  @click.stop>
                 <span style="color:black">链接</span>
@@ -11,8 +11,8 @@
                 <input type="text" placeholder="链接文字" class="linkeAddr" v-model="linkTitle">
                 <input type="text" placeholder="链接地址" class="linkeAddr" v-model="linkAddr">
                 <div class="footer">
-                    <button class="btn danger" @click="handleClose">取消</button>
-                    <button class="btn primary" @click="inserLink">确定</button>
+                    <button class="btn danger" @click.stop="handleClose">取消</button>
+                    <button class="btn primary" @click.stop="inserLink">确定</button>
                 </div>
             </div>
         </transition>
@@ -22,6 +22,7 @@
 <script>
 import './css/style.css'
 export default {
+    props:['range'],
     data(){
         return {
             linkTitle: '',
@@ -30,7 +31,7 @@ export default {
     },
     methods: {
         inserLink(){
-            this.restoreRange();
+            // this.restoreRange();
             /**
              * 如果只希望创建链接而不创建文件,则直接执行
              * this.execCommand("CreateLink",this.linkAddr);
