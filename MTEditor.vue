@@ -182,10 +182,8 @@ import addLink from './AddLink'
 import addTable from './AddTable'
 import imageMenu from './ContextMenu/imageMenu'
 export default {
-    props:{
-
-    },
     name: 'mt-editor',
+    props:['value'],
     data(){
         return {
             isHTML:'false',
@@ -275,8 +273,13 @@ export default {
     },
     mounted(){
         var richEdit = this.$refs.richEdit;
-        console.log(richEdit);
-        richEdit.innerHTML = `<p><br></p> `;
+        console.log(this.value);
+        if(this.value){
+            richEdit.innerHTML = this.value;
+        }else{
+            console.log(this.value);
+            richEdit.innerHTML = `<p><br></p> `;
+        }
         this.myInterval(()=>{
             this.saved = true;
             localStorage.setItem("code",richEdit.innerHTML)
