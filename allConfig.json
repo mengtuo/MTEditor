@@ -1,0 +1,18 @@
+[
+    {"commad":"bold","class":"fa fa-bold","title":"加粗"},
+    {"commad":"italic","class":"fa fa-italic","title":"斜体"},
+    {"commad":"underline","class":"fa fa-underline","title":"下划线"},
+    {"commad":"strikethrough","class":"fa fa-strikethrough","title":"删除线"},
+    {"commad":"justifyLeft","class":"fa fa-align-left","title":"居左"},
+    {"commad":"justifyCenter","class":"fa fa-align-center","title":"居中"},
+    {"commad":"justifyRight","class":"fa fa-align-right","title":"居右"},
+    {"commad":"justifyFull","class":"fa fa-align-justify","title":"两侧"},
+    {"commad":"InsertUnorderedList","class":"fa fa-list-ul","title":"无序列表"},
+    {"commad":"insertOrderedList","class":"fa fa-list-ol","title":"有序列表"},
+    {"commad":"superscript","class":"fa fa-superscript","title":"上标"},
+    {"commad":"subscript","class":"fa fa-subscript","title":"下标"},
+    {"commad":"code","class":"fa fa-code","title":"代码"},
+    {"commad":"removeFormat","class":"fa fa-eraser","title":"擦除"},
+    {"commad":"undo","class":"fa fa-undo","title":"撤销"},
+    {"commad":"redo","class":"fa fa-repeat","title":"重做"}
+]

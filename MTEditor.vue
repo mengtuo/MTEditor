@@ -2,160 +2,27 @@
     <div id="MTEditor" ref="MTEditor">
         <div class="MTEditor-header" @click="focusEditor">
                 <ul>
-                    <!-- <li style="text-align:center">
-                        <i class="fa fa-file-code-o"
-                            onmousedown="event.preventDefault();" 
-                            @click="showcodeView=!showcodeView"
-                            title="预览"
-                        ></i>
-                    </li> -->
                     <li>
                        <edHeader :showChild="showChild"/>
                     </li>
-                    <li @click.stop="execCommand('bold')" onmousedown="event.preventDefault()" >
-                        <i class="fa fa-bold" 
-                            title="加粗"
+                    <li v-for="(item,key) in allConfig" :key="key"
+                     onmousedown="event.preventDefault()"
+                     @click.stop="execCommand(item.commad)"
+                     >
+                         <i :class=item.class 
+                            :title=item.title
                             >
                         </i>
                     </li>
-                    <li onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('italic')">
-                        <i class="fa fa-italic" 
-                            
-                            title="斜体"
-                            >
-                        </i>
-                    </li>
-                    <li  onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('underline')">
-                        <i class="fa fa-underline" 
-                           
-                            title="下划线"
-                            >
-                        </i>
-                    </li>
-                    <li  onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('strikethrough')">
-                        <i class="fa fa-strikethrough" 
-                            title="删除线"
-                            >
-                        </i>
-                    </li>
-                    <li  onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('justifyLeft')">
-                        <i class="fa fa-align-left" 
-                           
-                            title="居左"    
-                        >
-                        </i>
-                    </li>
-                    <li onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('justifyCenter')">
-                        <i class="fa fa-align-center" 
-                            
-                            title="居中"    
-                        >
-                        </i>
-                    </li>
-                    <li onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('justifyRight')">
-                        <i class="fa fa-align-right" 
-                            
-                            title="居右"    
-                        >
-                        </i>
-                    </li>
-                    <li onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('justifyFull')">
-                        <i class="fa fa-align-justify" 
-                            
-                            title="两侧"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <!-- 插入图片 -->
+                    
+                    <li v-if="showImage">
                         <addImage :currentSelect="currentSelection" :range="range"/>
                     </li>
-                    <li>
-                       
+                    <li v-if="showTable">
                         <addTable :range="range"/>
                     </li>
-                    <li>
+                    <li v-if="showLink">
                         <addLink :range="range"/>
-                    </li>
-                    <li>
-                        <i class="fa fa-list-ul" 
-                            onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('InsertUnorderedList')"
-                            title="无序列表"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                    <i class="fa fa-list-ol" 
-                            onmousedown="event.preventDefault();" 
-                            @click.stop="execCommand('insertOrderedList')"
-                            title="有序列表"
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <i class="fa fa-superscript" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('superscript')"
-                            title="上标"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <i class="fa fa-subscript" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('subscript')"
-                            title="下标"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                         <i class="fa fa-code" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('code')"
-                            title="插入代码"    
-                        >
-                        </i>
-                        
-                    </li>
-                    <li>
-                        <i class="fa fa-smile-o" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('subscript')"
-                            title="表情"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <i class="fa fa-eraser" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('removeFormat')"
-                            title="取消效果"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <i class="fa fa-undo" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('undo')"
-                            title="撤销最近执行的命令"    
-                        >
-                        </i>
-                    </li>
-                    <li>
-                        <i class="fa fa-repeat" 
-                            onmousedown="event.preventDefault();" 
-                            @click="execCommand('redo')"
-                            title="重做被撤销的操作"    
-                        >
-                        </i>
                     </li>
                 </ul>
         </div>
@@ -181,9 +48,20 @@ import addImage from './AddImage/AddImage'
 import addLink from './AddLink'
 import addTable from './AddTable'
 import imageMenu from './ContextMenu/imageMenu'
+import configJSON from './allConfig.json'
 export default {
     name: 'mt-editor',
-    props:['value'],
+    components: {edHeader,addImage,addLink,addTable,imageMenu},
+    props:{
+        value: String,
+        config: {
+            type:Array,
+             // 对象或数组默认值必须从一个工厂函数获取
+            default: function () {
+                return configJSON;
+            }
+        }
+    },
     data(){
         return {
             isHTML:'false',
@@ -199,14 +77,37 @@ export default {
             currentSelection:{},//保留上次光标所在的位置
             isImage: false, //右键选中的是否是图片
             range: {},//光标信息
+            showImage: false,//显示image标签
+            showTable:false,
+            showLink: false
         }
     },
-    components: {
-        edHeader,
-        addImage,
-        addLink,
-        addTable,
-        imageMenu
+    computed: {
+        allConfig(){
+            // 求两个数组的交集
+               var rs = configJSON.filter((item)=>{
+                    // console.log(item.title);
+                             console.log(this.showImage)
+                    for(var i=0;i<this.config.length;i++){
+                        var config = this.config[i];
+                        console.log(item.commad);
+                        if(config.commad==="image"||config.title==="图片"){
+                            this.showImage = true;
+                        }
+                        if(config.commad==="table"||config.title==="表格"){
+                            this.showTable = true;
+                        }
+                        if(config.commad==="link"||config.title==="链接"){
+                            this.showLink = true;
+                        }
+                        if(item.title === config.title || item.commad===config.command){
+                            return true;
+                        }
+                    }
+                })
+                console.log(rs);
+            return  rs;
+        }
     },
     methods: {
         execCommand:(command,value) => {
