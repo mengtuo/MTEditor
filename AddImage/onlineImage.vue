@@ -23,12 +23,14 @@
 </template>
 <script>
 export default {
-  props:['currentSelect'],
+  props:['currentSelect','range'],
   data() {
     return {
       address: {
           addr1:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544632585413&di=48fd06b907a12300fe4c99585dafef35&imgtype=0&src=http%3A%2F%2Fimg0.ph.126.net%2FoM3Ux_qm9BNW6fp1HxJ8_Q%3D%3D%2F1687723960457254251.jpg',
-      }
+      },
+      imgWidth: 0,
+      imgHeight:0,
     };
   },
   methods: {
@@ -36,12 +38,32 @@ export default {
         this.$parent.show = false;
     },
     async insertImage() {
+        var innerDom = this.range.extractContents();
         this.restoreRange(this.currentSelect);    
         for (var key in this.address) {
             var rs = this.checkURL(this.address[key]);
             if(rs){
                 // 后期加上判断图片地址是否正确的正则
-                this.execCommand("insertImage", this.address[key]);
+                // this.execCommand("insertImage", this.address[key]);
+                 var img = document.createElement("img");
+                  img.className = 'inertImage'
+                  img.src =  this.address[key];
+                  img.style.width = "100%";
+                  img.style.height = this.imgHeight==0?'auto':this.imgHeight+'px';
+                  img.appendChild(innerDom);
+                  // img.onmousedown = (e)=>{
+                  //    window.event? window.event.cancelBubble = true : e.stopPropagation();
+                  //     switch(e.button){
+                  //         case 2: 
+                  //           // this.$parent.showImgMenu = true;
+                  //           // this.$parent.isImage = true;
+                  //           break;
+                  //     }
+                  // }
+                  this.range.insertNode(img);
+                  this.adjustList('.inertImage');
+                  this.handleClose();
+                  console.log(img.parentElement);
             }else{
                 console.log(key+"图片地址不正确");
             }
@@ -59,6 +81,9 @@ export default {
         return false;
       }
     }
+  },
+  watch: {
+    
   }
 };
 </script>

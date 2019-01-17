@@ -24,23 +24,15 @@
                 </table>
             </div>
         </div>
-         <Menu :showMenu="showMenu" :tapTd="tapTd" :tapTr="tapTr" :tapIndex="tapIndex"/>
     </div>
 </template>
 <script>
-import Menu from './Menu'
 export default {
     props: ['range'],
-    components: {Menu},
     data(){
         return {
             row: 5,
             column:5,
-            showMenu: false,
-            tapTd: {},//右键选中元素的
-            tapIndex: 0,//选中的元素的下标
-            tapTr: {},
-            rowIndex: 0,
             isTable: false
         }
     },
@@ -59,20 +51,6 @@ export default {
             table.className = "insertTable"
             table.setAttribute("cellspacing",0);
             table.setAttribute("border",0);
-            table.onmousedown = (e)=>{
-                window.event? window.event.cancelBubble = true : e.stopPropagation();
-                this.tapTr = e.target.parentElement;
-                 switch(e.button){
-                    case 2: 
-                        this.isTable = true;
-                        this.showMenu = true;
-                        this.tapTd = e.target;
-                        this.tapTr = e.target.parentElement;
-                        this.tapIndex = Array.from(this.tapTr.children).indexOf(e.target);
-                        break;
-                }
-            }
-           
             var rs = '';
             for(let i=0;i<this.row;i++){
                 var tr = document.createElement("tr");
@@ -90,10 +68,8 @@ export default {
             this.adjustList('.insertTable');
             this.resetAll();
             table.parentElement.onmousedown = (e)=>{
-                console.log("table的父级元素");
                 switch(e.button){
                     case 2: 
-                        console.log("在非table取邮件");
                         this.isTable = false;
                         break;
                 }
@@ -141,29 +117,7 @@ export default {
             }
         },
     },
-    watch: {
-        isTable(newValue){
-            if(newValue){
-                var contextmenu=document.getElementById('menu');
-                document.oncontextmenu = function(ev){
-                    var oEvent=ev||event;
-                    //一定要加px，要不然chrom不认
-                    contextmenu.style.position = "absolute";
-                    contextmenu.style.top=oEvent.clientY+10+'px';
-                    contextmenu.style.left=oEvent.clientX+'px';
-                    contextmenu.style.display='block';
-                    return false;
-                }
-                document.onclick = function(){
-                    contextmenu.style.display = 'none';
-                }
-            }else{
-                document.oncontextmenu = function(ev){
-                    return true;
-                }
-            }
-        }
-    }
+
 }
 </script>
 <style scoped>

@@ -32,10 +32,9 @@
             ref="richEdit"
             @blur="backupRange('输入框失去焦点')" 
             @input="code=$event.target.innerHTML,$emit('input',$event.target.innerHTML)"
-            @mousedown="mousedown"
             ></div>
         </div>
-        <image-menu v-show="isImage"/>
+        <context-menu :contextType="contextType"></context-menu>
         <transition name="fade">
             <div v-if="saved" class="savedConfirm" ref="saved">已保存到本地</div>
         </transition>
@@ -48,10 +47,11 @@ import addImage from './AddImage/AddImage'
 import addLink from './AddLink'
 import addTable from './AddTable'
 import imageMenu from './ContextMenu/imageMenu'
+import contextMenu from './ContextMenu/ContextMenu'
 import configJSON from './allConfig.json'
 export default {
     name: 'mt-editor',
-    components: {edHeader,addImage,addLink,addTable,imageMenu},
+    components: {edHeader,addImage,addLink,addTable,contextMenu},
     props:{
         value: String,
         config: {
@@ -79,18 +79,16 @@ export default {
             range: {},//光标信息
             showImage: false,//显示image标签
             showTable:false,
-            showLink: false
+            showLink: false,
+            contextType: 'div',//右键选中的类型
         }
     },
     computed: {
         allConfig(){
             // 求两个数组的交集
                var rs = configJSON.filter((item)=>{
-                    // console.log(item.title);
-                             console.log(this.showImage)
                     for(var i=0;i<this.config.length;i++){
                         var config = this.config[i];
-                        console.log(item.commad);
                         if(config.commad==="image"||config.title==="图片"){
                             this.showImage = true;
                         }
@@ -105,7 +103,6 @@ export default {
                         }
                     }
                 })
-                console.log(rs);
             return  rs;
         }
     },
@@ -123,24 +120,25 @@ export default {
                 this.myInterval(func,time);
             },time)
         },
-        mousedown(event){
-            var tagName = event.target.tagName;
-            switch(event.button){
-                case 2: 
-                    if(tagName==='IMG'){
-                        this.isImage = true;
-                    }
-                    break;
-            }
-        },
+        // mousedown(event){
+        //     var tagName = event.target.tagName;
+        //     switch(event.button){
+        //         case 2: 
+        //             if(tagName==='IMG'){
+        //                 this.contextType = "image";
+        //             }else if(tagName === "TD"){
+        //                 this.contextType = "table";
+        //             }else{
+        //                 this.contextType = "div";
+        //             }
+        //         break;
+        //     }
+        // },
          // 保留光标所在位置
          backupRange(text) {
-            console.log(text);
             let selection = window.getSelection();
             let range = selection.getRangeAt(0);
-            console.log(range);
             this.range = selection.getRangeAt(0);
-            console.log(range.startContainer);
             this.currentSelection = {
                 "startContainer": range.startContainer,
                 "startOffset": range.startOffset,
@@ -167,18 +165,15 @@ export default {
         },
         // 鼠标点击头部的空白地区的时候默认让输入框
         focusEditor(){
-            console.log("点击空白地方");
             var richEdit = this.$refs['richEdit'];
             richEdit.focus();
         }
     },
     mounted(){
         var richEdit = this.$refs.richEdit;
-        console.log(this.value);
         if(this.value){
             richEdit.innerHTML = this.value;
         }else{
-            console.log(this.value);
             richEdit.innerHTML = `<p><br></p> `;
         }
         this.myInterval(()=>{

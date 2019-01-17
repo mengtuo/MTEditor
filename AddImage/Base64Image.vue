@@ -41,9 +41,7 @@ export default {
         },
         // 将图片插入到内容中
         async insertImage(type) {
-            console.log(this.range);
             var innerDom = this.range.extractContents();
-            console.log(innerDom);
              this.restoreRange(this.currentSelect);
              for (var i = 0; i < this.files.length; i++) {
                 var file = this.files[i];
@@ -79,10 +77,8 @@ export default {
                 image.style.cssText = "width:160px;";
                 var p = await new Promise((resolve, reject) => {
                 image.onload = ()=> {
-                    console.log(image.width);
                     this.imgHeight = image.height;
                     this.imgWidth = image.width;
-                    console.log(image.height);
                     target.appendChild(image);
                     resolve();
                 };

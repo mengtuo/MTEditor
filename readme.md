@@ -1,32 +1,31 @@
-## vue rich text editor
-    vue富文本编辑器
+# vue富文本编辑器
 
-## install plugin
+## 安装组件
 
 ```
 npm install --save mteditor
 ```
-## register plugin
-register plugin in main.js
+## 注册组件
+在main.js里配置
 ```
 import MTEditor from 'MTEditor'
 Vue.use(MTEditor);
 ```
-## useage
+## 使用方式
+
+#### 第一种使用方式
 ```   
-1. first useage
-This will show all the features,default
+直接使用会显示所有富文本的所有功能
 <mt-editor v-model="message"></mt-editor>
 data: {
     message: ''
 }
 
 ```
-
+#### 第二种使用方式
+可以根据需要,对富文本的功能进行配置
 ```
-2. second usesage
-This will configure the corresponding function according to your needs.
-All configurations
+所有功能的配置信息
 [
     {"command":"bold","title":"加粗"},
     {"command":"italic","title":"斜体"},
@@ -49,7 +48,7 @@ All configurations
     {"command":"link",title:'链接'}
 ]
 
-useage
+使用方式
 
 <mt-editor v-model="message" :config="config"></mt-editor>
 data: {
@@ -57,11 +56,15 @@ data: {
     config:[
         {"command":"bold","title":"加粗"},
         {"command":"italic","title":"斜体"},
-        {"command":"underline","title":"下划线"},
-        {"title":"居左"},
-        {"command":"InsertUnorderedList"},
+        {"command":"underline","title":"下划线"},//可以同时传递命令和title
+        {"title":"居左"}, //可以单独传递title
+        {"command":"InsertUnorderedList"},//可以单独传递命令
         {"command":"table"}
     ] 
 }
 
 ```
+
+### Keywords
+
+简单的vue富文本编辑器

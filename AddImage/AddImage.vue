@@ -32,6 +32,7 @@
         <server-image v-if="currentIndex==3" :currentSelect="currentSelect" @click.stop :range="range"></server-image>
       </div>
     </div>
+    <!-- <image-menu v-show="showImgMenu"></image-menu> -->
   </div>
 </template>
 
@@ -39,15 +40,45 @@
 import base64IMG from './Base64Image'
 import onlineImage from './onlineImage'
 import ServerImage from './ServerImage'
+import imageMenu from '../ContextMenu/imageMenu'
+
 export default {
   props: ['currentSelect','range'],
-  components: {base64IMG,onlineImage,ServerImage},
+  components: {base64IMG,onlineImage,ServerImage,imageMenu},
   data() {
     return {
       currentIndex: 1,
       files: [],
+      showImgMenu: false,
+      isImage:false
     };
-  }
+  },
+  watch: {
+    isImage(newValue){
+      console.log("内容");
+      if(newValue){
+         var contextmenu=document.getElementById('imageMenu');
+         console.log(contextmenu);
+         console.log("内容");
+          document.oncontextmenu = function(ev){
+              var oEvent=ev||event;
+              //一定要加px，要不然chrom不认
+              contextmenu.style.position = "absolute";
+              contextmenu.style.top=oEvent.clientY+10+'px';
+              contextmenu.style.left=oEvent.clientX+'px';
+              contextmenu.style.display='block';
+              return false;
+          }
+          document.onclick = function(){
+              contextmenu.style.display = 'none';
+          }
+      }else{
+        document.oncontextmenu = function(ev){
+          return true;
+        }
+      }
+    }
+  },
 };
 </script>
 <style scoped>
