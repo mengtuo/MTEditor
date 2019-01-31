@@ -1,9 +1,9 @@
 <template>
         <div class="uploadServer">
-             <div class="baseURL">
+             <!-- <div class="baseURL">
                 <label>基础路径</label>
                 <input type="text" v-model="baseURL" id="baseURL">
-            </div>
+            </div> -->
             <div class="serverAddress">
                 <label for="serverAddress">服务器地址</label>
                 <input type="text" id="serverAddress" class="address" v-model="address">
@@ -19,10 +19,10 @@
                         </div>
                      </li>
                  </ul>
-                <label for="localSource" class="localSourceLabel" ref="localLabel" v-show="files.length<3">
+                <label for="localSource" class="localSourceLabel" ref="localLabel" v-show="files.length<3" @click.stop>
                     <i class="fa fa-cloud-upload" aria-hidden="true"></i>
                 </label>
-                <input type="file" id="localSource" multiple="multiple" @change="selectFile">
+                <input type="file" id="localSource" multiple="multiple" @change="selectFile"  @click.stop>
             </div>
             <div class="results">
                 <ul>
@@ -62,7 +62,6 @@ export default {
         },
             // 选择图片
         selectFile(event) {
-            console.log("测试");
             var e = event || window.event;
             var files = e.target.files;
             if(files.length>1){
@@ -74,8 +73,6 @@ export default {
                 this.files.push(files[0]);
             }
             var addIcon = this.$refs.addIcon;
-            console.log("选择图片");
-            console.log(this.files);
             this.previewImage(this.files, addIcon);
         },
         async previewImage(files, target) {
@@ -98,13 +95,6 @@ export default {
                 if(!isSaved){
                     this.imagesTarget.push(image);
                 }
-                // var p = await new Promise((resolve, reject) => {
-                // image.onload = function() {
-                //     // target.appendChild(image);
-                //     target.insertBefore(image,localLabel)
-                //     resolve();
-                // };
-            // });
         }
         },
         startUpload(){
