@@ -52,7 +52,7 @@ export default {
                   img.style.height = this.imgHeight==0?'auto':this.imgHeight+'px';
                   img.appendChild(innerDom);
                   this.range.insertNode(img);
-                  this.adjustList('.inertImage');
+                  // this.adjustList('.inertImage');
                   this.handleClose();
                   console.log(img.parentElement);
             }else{

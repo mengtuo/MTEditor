@@ -65,7 +65,7 @@ export default {
             }
             table.appendChild(innerDom);
             this.range.insertNode(table);
-            this.adjustList('.insertTable');
+            // this.adjustList('.insertTable');
             this.resetAll();
             table.parentElement.onmousedown = (e)=>{
                 switch(e.button){

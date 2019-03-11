@@ -45,6 +45,7 @@ export default {
                 }
             }else if(newValue === 'table'){
                 console.log(this.contextEvent);
+                console.log("点击的是表格");
                 var contextmenu=document.getElementById('menu');
                 document.oncontextmenu = function(ev){
                     var oEvent=ev||event;
@@ -65,12 +66,13 @@ export default {
             }
         }
     },
-    created() {
+    mounted() {
         var richEdit = this.$parent.$refs['richEdit'];
         richEdit.onmousedown = (e)=>{
             var tagName = e.target.tagName;
             switch(e.button){
                 case 2: 
+                    console.log("右键");
                     if(tagName==='IMG'){
                         this.contextType = "image";
                         this.imgTarget = e.target;

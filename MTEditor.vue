@@ -120,20 +120,6 @@ export default {
                 this.myInterval(func,time);
             },time)
         },
-        // mousedown(event){
-        //     var tagName = event.target.tagName;
-        //     switch(event.button){
-        //         case 2: 
-        //             if(tagName==='IMG'){
-        //                 this.contextType = "image";
-        //             }else if(tagName === "TD"){
-        //                 this.contextType = "table";
-        //             }else{
-        //                 this.contextType = "div";
-        //             }
-        //         break;
-        //     }
-        // },
          // 保留光标所在位置
          backupRange(text) {
             let selection = window.getSelection();
@@ -185,12 +171,12 @@ export default {
         },30000);
     },
     directives: {
-    focus: {
-      inserted: function (el) {
-        el.focus()
-      }
+        focus: {
+        inserted: function (el) {
+            el.focus()
+        }
+        }
     }
-  }
 }
 </script>
 
