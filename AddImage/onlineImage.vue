@@ -56,12 +56,11 @@ export default {
                   this.handleClose();
                   console.log(img.parentElement);
             }else{
-                console.log(key+"图片地址不正确");
+                alert(key+"图片地址不正确");
             }
         }
     },
     checkURL(url) {
-      console.log("url是"+url);
       var reg = /\.(png|jpg|gif|jpeg)$/;
       return reg.test(url)
     }
