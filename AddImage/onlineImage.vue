@@ -51,15 +51,6 @@ export default {
                   img.style.width = "100%";
                   img.style.height = this.imgHeight==0?'auto':this.imgHeight+'px';
                   img.appendChild(innerDom);
-                  // img.onmousedown = (e)=>{
-                  //    window.event? window.event.cancelBubble = true : e.stopPropagation();
-                  //     switch(e.button){
-                  //         case 2: 
-                  //           // this.$parent.showImgMenu = true;
-                  //           // this.$parent.isImage = true;
-                  //           break;
-                  //     }
-                  // }
                   this.range.insertNode(img);
                   this.adjustList('.inertImage');
                   this.handleClose();
@@ -69,14 +60,10 @@ export default {
             }
         }
     },
-    checkURL(URL) {
-      console.log(URL);
-      var str = URL;
-      //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
-      //下面的代码中应用了转义字符"\"输出一个字符"/"
+    checkURL(url) {
+      console.log("url是"+url);
       var reg = /\.(png|jpg|gif|jpeg)$/;
-     
-      return reg.test(str);
+      return reg.test(url)
     }
   },
   watch: {
