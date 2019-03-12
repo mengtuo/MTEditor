@@ -131,9 +131,8 @@ export default {
                 value? document.execCommand(command, false, value):document.execCommand(command, false, null)
             }
         },
-        // 点击插入代码按钮,弹框
-        insertCode(){
-
+        test(){
+            console.log("测试");
         },
         myClearTimeout(){
             clearTimeout(this.timeOut);
@@ -204,6 +203,11 @@ export default {
         inserted: function (el) {
             el.focus()
         }
+        }
+    },
+    watch:{
+        code(newValue){
+            this.$emit('input',newValue)
         }
     }
 }
