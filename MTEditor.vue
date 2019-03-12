@@ -14,7 +14,9 @@
                             >
                         </i>
                     </li>
-                    
+                    <li v-if="showCode">
+                        <addCode :range="range"></addCode>
+                    </li>
                     <li v-if="showImage">
                         <addImage :currentSelect="currentSelection" :range="range"/>
                     </li>
@@ -46,12 +48,13 @@ import edHeader from './Header'
 import addImage from './AddImage/AddImage'
 import addLink from './AddLink'
 import addTable from './AddTable'
+import addCode from './AddCode/AddCode'
 import imageMenu from './ContextMenu/imageMenu'
 import contextMenu from './ContextMenu/ContextMenu'
 import configJSON from './allConfig.json'
 export default {
     name: 'mt-editor',
-    components: {edHeader,addImage,addLink,addTable,contextMenu},
+    components: {edHeader,addImage,addLink,addTable,contextMenu,addCode},
     props:{
         value: String,
         config: {
@@ -80,6 +83,7 @@ export default {
             showImage: false,//显示image标签
             showTable:false,
             showLink: false,
+            showCode: false,
             contextType: 'div',//右键选中的类型
         }
     },
@@ -89,6 +93,9 @@ export default {
                var rs = configJSON.filter((item)=>{
                     for(var i=0;i<this.config.length;i++){
                         var config = this.config[i];
+                        if(config.commad==="code" || config.title==="代码"){
+                            this.showCode = true;
+                        }
                         if(config.commad==="image"||config.title==="图片"){
                             this.showImage = true;
                         }
@@ -108,7 +115,17 @@ export default {
     },
     methods: {
         execCommand:(command,value) => {
-		    value? document.execCommand(command, false, value):document.execCommand(command, false, null)
+            console.log("命令",command);
+            if(command == 'code'){
+                // 插入代码
+                this.insertCode()
+            }else{
+                value? document.execCommand(command, false, value):document.execCommand(command, false, null)
+            }
+        },
+        // 点击插入代码按钮,弹框
+        insertCode(){
+
         },
         myClearTimeout(){
             clearTimeout(this.timeOut);
