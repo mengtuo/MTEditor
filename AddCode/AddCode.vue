@@ -70,19 +70,20 @@ export default {
                 "Shell",
                 "Session"
             ],
-            language:'JavaScript',
+            language:'Java',
             code:''
         }
     },
     methods:{
         handleClose(){
             this.show=false;
+             this.code = '';
         },
         test(){
             console.log("点击");
         },
         insertCode(){
-            this.code = this.code.replace(/\</g,'&lt;').replace(/\>/g,'&gt;');
+            var code = this.code.replace(/\</g,'&lt;').replace(/\>/g,'&gt;');
              /**
               * 创建一个code标签
               */
@@ -90,7 +91,7 @@ export default {
             var preDom = document.createElement("pre");
             var codeDom = document.createElement("code");
             codeDom.className = this.language;
-            codeDom.innerHTML = this.code;
+            codeDom.innerHTML = code;
             preDom.appendChild(codeDom);
             preDom.append(innerDom);
             this.range.insertNode(preDom);

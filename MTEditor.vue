@@ -1,5 +1,5 @@
 <template>
-    <div id="MTEditor" ref="MTEditor">
+    <div id="MTEditor" ref="MTEditor" :style="{height:height,width:width}">
         <div class="MTEditor-header" @click="focusEditor">
                 <ul>
                     <li>
@@ -28,7 +28,7 @@
                     </li>
                 </ul>
         </div>
-        <div class="MTEditor-content" >
+        <div class="MTEditor-content" ref="MTEditorContent">
             <div  id="text_area" 
             contenteditable=true v-focus 
             ref="richEdit"
@@ -63,6 +63,14 @@ export default {
             default: function () {
                 return configJSON;
             }
+        },
+        width: {
+            type: String,
+            default: '100%'
+        },
+        height: {
+            type: String,
+            default: '100%'
         }
     },
     data(){
@@ -179,6 +187,10 @@ export default {
         }else{
             richEdit.innerHTML = `<p><br></p> `;
         }
+        var MTEditor = this.$refs.MTEditor;
+        console.log(MTEditor.clientHeight);
+        var MTContent = this.$refs.MTEditorContent;
+        MTContent.style.height = (MTEditor.clientHeight-44)+"px"
         this.myInterval(()=>{
             this.saved = true;
             localStorage.setItem("code",richEdit.innerHTML)
@@ -238,9 +250,6 @@ export default {
     }
     .MTEditor-content{
         width: 100%;
-        height: 400px;
-        padding: 10px;
-        box-sizing: border-box;
         overflow-y: scroll;
     }
     #text_area,#coldView{
@@ -249,7 +258,7 @@ export default {
         outline: none;
         border:none;
         resize: none;
-        padding: 0;
+        padding: 5px;
         text-align: left;
         box-sizing: border-box
     }
