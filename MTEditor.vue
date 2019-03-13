@@ -26,6 +26,9 @@
                     <li v-if="showLink">
                         <addLink :range="range"/>
                     </li>
+                    <li @click="preview=true" >
+                        <i class="fa fa-eye" title="预览"></i>
+                    </li>
                 </ul>
         </div>
         <div class="MTEditor-content" ref="MTEditorContent">
@@ -40,6 +43,8 @@
         <transition name="fade">
             <div v-if="saved" class="savedConfirm" ref="saved">已保存到本地</div>
         </transition>
+        <div class="preview" v-if="preview" v-html="value">
+        </div>
     </div>
 </template>
 <script>
@@ -93,6 +98,7 @@ export default {
             showLink: false,
             showCode: false,
             contextType: 'div',//右键选中的类型
+            preview:false,
         }
     },
     computed: {
@@ -130,9 +136,6 @@ export default {
             }else{
                 value? document.execCommand(command, false, value):document.execCommand(command, false, null)
             }
-        },
-        test(){
-            console.log("测试");
         },
         myClearTimeout(){
             clearTimeout(this.timeOut);
@@ -229,6 +232,7 @@ export default {
         width: 100%;
         min-height: 400px;
         border: 1px solid lightgray;
+        position: relative;
     }
     .MTEditor-header{
         width: 100%;
@@ -281,5 +285,12 @@ export default {
         position: absolute;
         bottom: 0;
         right: 10px;
+    }
+    .preview{
+        width: 100%;
+        height: 100%;
+        background: white;
+        position: absolute;
+        top: 0;
     }
 </style>
