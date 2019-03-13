@@ -44,15 +44,17 @@ export default {
                     contextmenu.style.display = 'none';
                 }
             }else if(newValue === 'table'){
-                console.log(this.contextEvent);
+                console.log(this.$parent.$refs.MTEditor.offsetLeft);
                 console.log("点击的是表格");
+                var offsetLeft = this.$parent.$refs.MTEditor.offsetLeft;
                 var contextmenu=document.getElementById('menu');
                 document.oncontextmenu = function(ev){
                     var oEvent=ev||event;
+                    console.log(oEvent);
                     //一定要加px，要不然chrom不认
                     contextmenu.style.position = "absolute";
                     contextmenu.style.top=oEvent.clientY+10+'px';
-                    contextmenu.style.left=oEvent.clientX+'px';
+                    contextmenu.style.left=oEvent.clientX-offsetLeft+'px';
                     contextmenu.style.display='block';
                     return false;
                 }

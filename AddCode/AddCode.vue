@@ -93,10 +93,10 @@ export default {
             preDom.appendChild(codeDom);
             preDom.append(innerDom);
             this.range.insertNode(preDom);
-            this.$parent.code += preDom.innerHTML;
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });
+            this.$parent.code += preDom.outerHTML;
             this.handleClose();
             
         }

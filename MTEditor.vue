@@ -26,9 +26,9 @@
                     <li v-if="showLink">
                         <addLink :range="range"/>
                     </li>
-                    <!-- <li @click="preview=true" >
-                        <i class="fa fa-eye" title="预览"></i>
-                    </li> -->
+                    <li @click="preview=!preview" >
+                        <i :class="{fa:true,'fa-eye':!preview,'fa-eye-slash':preview}" title="预览"></i>
+                    </li>
                 </ul>
         </div>
         <div class="MTEditor-content" ref="MTEditorContent">
@@ -291,6 +291,8 @@ export default {
         height: 100%;
         background: white;
         position: absolute;
-        top: 0;
+        padding: 5px;
+        box-sizing: border-box;
+        top: 35px;
     }
 </style>

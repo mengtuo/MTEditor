@@ -1,6 +1,6 @@
 {
   "name": "mteditor",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "注册插件\r ```\r import MTEditor from 'MTEditor'\r Vue.use(MTEditor);\r ```\r 在页面中使用",
   "main": "index.js",
   "scripts": {
