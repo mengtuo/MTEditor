@@ -294,5 +294,6 @@ export default {
         padding: 5px;
         box-sizing: border-box;
         top: 35px;
+        text-align: left;
     }
 </style>
