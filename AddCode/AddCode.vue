@@ -20,9 +20,7 @@
                      </select>
                  </div>
                  <div class="codePanel">
-                     <textarea name="" id="" cols="30" rows="10" v-model="code">
-
-                     </textarea>
+                     <textarea name="" id="" cols="30" rows="10" v-model="code"></textarea>
                  </div>
                  <div class="addCodeFoot">
                      <button class="btn primary" @click="insertCode">确定</button>
@@ -95,8 +93,7 @@ export default {
             preDom.appendChild(codeDom);
             preDom.append(innerDom);
             this.range.insertNode(preDom);
-            console.log(this.$parent.code);
-            this.$parent.code += preDom.innerHTML;
+            this.$parent.code += preDom.outerHTML;
             document.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightBlock(block);
             });
